@@ -1,0 +1,20 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+
+}
+
+dependencies {
+    compileOnly 'androidx.appcompat:appcompat:1.0.2'
+    compileOnly 'androidx.recyclerview:recyclerview:1.0.0+'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}

@@ -1,1 +1,9 @@
 Java.gitignore
+*.iml
+.idea
+.gradle
+build/
+local.properties
+androidTest/
+test/
+gradle
