@@ -7,9 +7,9 @@
 
 
 
-## 配置
+## 配置(暂时未上传成功)
 ```
-implementation 'support.lfp:BaseRecyclerViewAdapter:1.0.0'
+//implementation 'support.lfp:BaseRecyclerViewAdapter:1.0.0'
 ```
 
 
