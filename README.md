@@ -9,7 +9,7 @@
 
 ## 配置
 ```
-implementation 'support.lfp:baserecyclerviewadapter:1.0.0'
+implementation 'support.lfp:BaseRecyclerViewAdapter:1.0.0'
 ```
 
 
@@ -26,6 +26,10 @@ buildscript {
 ```
 
 
+如果启用了混淆
+```
+-keep class support.lfp.adapter.SimpleRecyclerViewAdapter$NotProguardViewHolder {* ;}
+```
 
 ## LICENSE
 

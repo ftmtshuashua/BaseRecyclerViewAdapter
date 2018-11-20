@@ -1,4 +1,4 @@
-package lfp.support.adapter
+package support.lfp.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -23,9 +23,9 @@ class SimpleRecyclerViewAdapter<D>(
 ) : BaseRecyclerViewAdapter<D>() {
 
     @NonNull
-    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): BaseRecyclerViewAdapter.BaseViewHolder<D> {
+    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): BaseViewHolder<D> {
         try {
-            val cls = cls_vh.getDeclaredConstructor(View::class.java!!) as Constructor<NotProguardViewHolder<D>>
+            val cls = cls_vh.getDeclaredConstructor(View::class.java)
             if (!cls.isAccessible) cls.isAccessible = true
             return cls.newInstance(LayoutInflater.from(parent.context).inflate(layout_resouce_id, parent, false))
         } catch (ex: NoSuchMethodException) {
@@ -42,6 +42,6 @@ class SimpleRecyclerViewAdapter<D>(
      *
      * @param <T> object
     </T> */
-    abstract class NotProguardViewHolder<T>(itemView: View) : BaseRecyclerViewAdapter.BaseViewHolder<T>(itemView)
+    abstract class NotProguardViewHolder<T>(itemView: View) : BaseViewHolder<T>(itemView)
 
 }

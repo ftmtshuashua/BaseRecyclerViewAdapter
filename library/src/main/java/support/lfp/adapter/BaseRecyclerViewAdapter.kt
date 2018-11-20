@@ -1,4 +1,4 @@
-package lfp.support.adapter
+package support.lfp.adapter
 
 import android.content.Context
 import android.view.View
