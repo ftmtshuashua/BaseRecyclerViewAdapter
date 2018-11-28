@@ -5,30 +5,32 @@
 ## 使用
 请参考：[ARDF](https://github.com/ftmtshuashua/ARDF)的适配器部分
 
+## 配置依赖
 
-
-## 配置(暂时未上传成功)
+在项目的build.gradle中添加
 ```
-//implementation 'support.lfp:BaseRecyclerViewAdapter:1.0.0'
-```
-
-
-在项目的build.gradle中添加kotlin支持
-```
-buildscript {
-    ext.kotlin_version = 'version'
+allprojects {
     repositories {
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        maven { url 'https://www.jitpack.io' }
     }
 }
 ```
-
+在Model的build.gradle中添加
+```
+dependencies {
+    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:v1.0.1'
+}
+```
+该项目在AndroidX基础上搭建,需要以下库
+```
+implementation 'androidx.fragment:fragment:version'
+implementation 'androidx.appcompat:appcompat:version'
+```
 
 如果启用了混淆
+
 ```
--keep class support.lfp.adapter.SimpleRecyclerViewAdapter$NotProguardViewHolder {* ;}
+-keep class support.lfp.adapter.BaseRecyclerViewAdapter$BaseViewHolder {* ;}
 ```
 
 ## LICENSE

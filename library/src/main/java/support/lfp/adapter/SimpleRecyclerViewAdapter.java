@@ -14,10 +14,10 @@ import java.lang.reflect.Constructor;
  */
 public class SimpleRecyclerViewAdapter<D> extends BaseRecyclerViewAdapter<D> {
 
-    Class<? extends NotProguardViewHolder<D>> cls_vh;
+    Class<? extends BaseViewHolder<D>> cls_vh;
     int layout_resouce_id;
 
-    public SimpleRecyclerViewAdapter(Class<? extends NotProguardViewHolder<D>> vh, int layout_resouce_id) {
+    public SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>> vh, int layout_resouce_id) {
         this.cls_vh = vh;
         this.layout_resouce_id = layout_resouce_id;
     }
@@ -26,7 +26,7 @@ public class SimpleRecyclerViewAdapter<D> extends BaseRecyclerViewAdapter<D> {
     @Override
     public BaseViewHolder<D> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         try {
-            Constructor<NotProguardViewHolder<D>> cls = (Constructor<NotProguardViewHolder<D>>) cls_vh.getDeclaredConstructor(View.class);
+            Constructor<BaseViewHolder<D>> cls = (Constructor<BaseViewHolder<D>>) cls_vh.getDeclaredConstructor(View.class);
             if (!cls.isAccessible()) cls.setAccessible(true);
             return cls.newInstance(LayoutInflater.from(parent.getContext()).inflate(layout_resouce_id, parent, false));
         } catch (NoSuchMethodException ex) {
@@ -36,17 +36,5 @@ public class SimpleRecyclerViewAdapter<D> extends BaseRecyclerViewAdapter<D> {
         }
     }
 
-    /**
-     * 使用反射创建ViewHolder必须保证它不被混淆,请添加-Keep
-     * 推荐使用BaseRecyclerViewAdapter自己实现
-     *
-     * @param <T> object
-     */
-    public static abstract class NotProguardViewHolder<T> extends BaseRecyclerViewAdapter.BaseViewHolder<T> {
-
-        public NotProguardViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
 
 }
