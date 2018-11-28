@@ -23,7 +23,7 @@ dependencies {
 ```
 该项目在AndroidX基础上搭建,需要以下库
 ```
-implementation 'androidx.fragment:fragment:version'
+implementation 'androidx.recyclerview:recyclerview:version'
 implementation 'androidx.appcompat:appcompat:version'
 ```
 
