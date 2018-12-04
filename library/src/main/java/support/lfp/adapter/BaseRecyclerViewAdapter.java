@@ -8,9 +8,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * RecyclerView简化适配器
- * Created by LiFuPing on 2018/5/9.
+ * <pre>
+ * Tip:
+ *      RecyclerView万能适配器
+ *
+ * Function:
+ *      isSearched()            :判断是否为搜索模式
+ *
+ * Created by LiFuPing on 22018/5/9
+ * </pre>
  */
 public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<BaseRecyclerViewAdapter.BaseViewHolder<D>> {
 
@@ -44,54 +52,106 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
      */
     public static final int FLAG_DISABLE_ITEM_ANIMATOR = 0xFF;
 
-    /**
-     * 用于列表中显示数据
-     */
-    final List<D> mArrayModel = new ArrayList<>();
-    /**
-     * 观察Adapter数据变化
-     */
-    OnAdapterDataChange mOnAdapterDataChange;
-    ViewHolderMessageHandler mViewHolderMessageHandler;
+    /* 用于列表中显示数据 */
+    private final List<D> mArrayModel = new ArrayList<>();
+    /* 在源数据以外提供另一个数据集，该数据集优先于源数据。当它不为空的时候首先展示它,而不展示源数据集中的数据 */
+    private final List<D> mArrayModelSearch = new ArrayList<>();
 
-    int mFlag;
+
+    /* 数据变化监听 */
+    private OnAdapterDataChangeListener mOnAdapterDataChangeListener;
+    /* ViewHolder消息处理器 */
+    private ArrayList<ViewHolderMessageHandler> mViewHolderMessageHandler = new ArrayList<>();
+    /* ItemView点击事件监听 */
+    private OnItemClickListener mOnItemClickListener;
+
+    private int mFlag;
+
+    /**
+     * 判断是否为搜索模式
+     */
+    public boolean isSearched() {
+        return !mArrayModelSearch.isEmpty();
+    }
+
+    /**
+     * 设置ItemView点击事件监听
+     *
+     * @param l The AdapterView.OnItemClickListener
+     */
+    public void setOnItemClickListener(OnItemClickListener<? super D> l) {
+        mOnItemClickListener = l;
+    }
 
     /**
      * 添加数据变化检查
      *
      * @param l OnAdapterDataChange
      */
-    public void setOnAdapterDataChange(OnAdapterDataChange l) {
-        mOnAdapterDataChange = l;
+    public void setOnAdapterDataChangeListener(OnAdapterDataChangeListener<? super D> l) {
+        mOnAdapterDataChangeListener = l;
     }
 
     /**
-     * ViewHolder变化监听
+     * ViewHolder消息处理器，用于接收和处理来自ViewHolder的消息
      *
-     * @param l ViewHolderMessageHandler
+     * @param handler ViewHolderMessageHandler
      */
-    public void setViewHolderMessageHandler(ViewHolderMessageHandler l) {
-        mViewHolderMessageHandler = l;
+    public void addViewHolderMessageHandler(ViewHolderMessageHandler handler) {
+        mViewHolderMessageHandler.add(handler);
     }
 
+    public void removeViewHolderMessageHandler(ViewHolderMessageHandler handler) {
+        mViewHolderMessageHandler.remove(handler);
+    }
+
+    /**
+     * 设置Adapter标志
+     *
+     * @param flag
+     */
     public void setFlag(int flag) {
         mFlag |= flag;
     }
 
     /**
-     * 播报数据更新
+     * 调用OnItemClickListener监听
+     *
+     * @param view
+     * @return 是否成功调用
      */
-    public void broadcastDataChange() {
-        if (mOnAdapterDataChange != null) mOnAdapterDataChange.onChange(this);
+    public boolean performItemClick(BaseViewHolder view) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(this, view, view.getAdapterPosition(), view.getItemId());
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 通知适配器的数据变化观察者，该适配器有一个数据变化事件
+     */
+    public final void broadcastDataChange() {
+        if (mOnAdapterDataChangeListener != null) mOnAdapterDataChangeListener.onChange(this);
     }
 
     /**
-     * 获得列表数据
+     * 获得源数据
      *
      * @return List
      */
     public List<D> getData() {
         return mArrayModel;
+    }
+
+    /**
+     * 获得搜索源数据
+     *
+     * @return List
+     */
+    public List<D> getSearchData() {
+        return mArrayModelSearch;
     }
 
     /**
@@ -123,6 +183,36 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
         addData(data);
     }
 
+
+    /**
+     * 设置数据并且更新
+     *
+     * @param data 数据
+     * @param <T>  object
+     */
+    public <T extends D> void setSearchAndUpdata(List<T> data) {
+        int old_count = getItemCount();
+        setSearchData(data);
+        int new_count = getItemCount();
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_SET) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRangeRemoved(0, old_count);
+            notifyItemRangeChanged(0, new_count);
+        }
+    }
+
+    /**
+     * 设置数据
+     *
+     * @param data 数据
+     * @param <T>  object
+     */
+    public <T extends D> void setSearchData(List<T> data) {
+        mArrayModelSearch.clear();
+        addSearchData(data);
+    }
+
     /**
      * 设置数据并且更新
      *
@@ -148,6 +238,34 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
     public void setData(D data) {
         mArrayModel.clear();
         addData(data);
+    }
+
+
+    /**
+     * 设置数据并且更新
+     *
+     * @param data 数据
+     */
+    public void setSearchAndUpdata(D data) {
+        int old_count = getItemCount();
+        setSearchData(data);
+        int new_count = getItemCount();
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_SET) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRangeRemoved(0, old_count);
+            notifyItemRangeChanged(0, new_count);
+        }
+    }
+
+    /**
+     * 设置数据
+     *
+     * @param data 数据
+     */
+    public void setSearchData(D data) {
+        mArrayModelSearch.clear();
+        addSearchData(data);
     }
 
     /**
@@ -177,6 +295,34 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
         broadcastDataChange();
     }
 
+
+    /**
+     * 在末尾添加数据并更新
+     *
+     * @param data 数据
+     * @param <T>  object
+     */
+    public <T extends D> void addSearchAndUpdata(List<T> data) {
+        int old_count = getItemCount();
+        addSearchData(data);
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_ADD) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRangeChanged(old_count, getItemCount());
+        }
+    }
+
+    /**
+     * 在末尾添加数据
+     *
+     * @param data 数据
+     * @param <T>  object
+     */
+    public <T extends D> void addSearchData(List<T> data) {
+        mArrayModelSearch.addAll(data);
+        broadcastDataChange();
+    }
+
     /**
      * 在末尾添加数据并更新
      *
@@ -201,6 +347,32 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
         mArrayModel.add(data);
         broadcastDataChange();
     }
+
+    /**
+     * 在末尾添加数据并更新
+     *
+     * @param data 数据
+     */
+    public void addSearchAndUpdata(D data) {
+        int old_count = getItemCount();
+        addSearchData(data);
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_ADD) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRangeChanged(old_count, getItemCount());
+        }
+    }
+
+    /**
+     * 在末尾添加数据
+     *
+     * @param data 数据
+     */
+    public void addSearchData(D data) {
+        mArrayModelSearch.add(data);
+        broadcastDataChange();
+    }
+
 
     /**
      * 在index位置插入数据
@@ -235,6 +407,40 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
         }
     }
 
+
+    /**
+     * 在index位置插入数据
+     *
+     * @param index 插入位置
+     * @param data  数据
+     * @param <T>   object
+     */
+    public <T extends D> void insertSearchAndUpdata(int index, List<T> data) {
+        mArrayModelSearch.addAll(index, data);
+        broadcastDataChange();
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_INSERT) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRangeInserted(index, data.size());
+        }
+    }
+
+    /**
+     * 在index位置插入单条数据
+     *
+     * @param index 插入位置
+     * @param data  数据
+     */
+    public void insertSearchAndUpdata(int index, D data) {
+        mArrayModelSearch.add(index, data);
+        broadcastDataChange();
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_INSERT) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemInserted(index);
+        }
+    }
+
     /**
      * 移除数据并更新
      *
@@ -260,6 +466,31 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
     }
 
     /**
+     * 移除数据并更新
+     *
+     * @param postion 移除数据位置
+     */
+    public void removeSearchAndUpdata(int postion) {
+        removeSearchData(postion);
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_REMOVE) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemRemoved(postion);
+        }
+    }
+
+    /**
+     * 移除数据
+     *
+     * @param postion 移除数据位置
+     */
+    public void removeSearchData(int postion) {
+        mArrayModelSearch.remove(postion);
+        broadcastDataChange();
+    }
+
+
+    /**
      * 移动数据
      *
      * @param fromPosition 被移动数据位置
@@ -268,6 +499,24 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
     public void moveAndUpdata(int fromPosition, int toPosition) {
         D form = mArrayModel.remove(fromPosition);
         mArrayModel.add(toPosition, form);
+        broadcastDataChange();
+        if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_MOVE) != 0) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemMoved(fromPosition, toPosition);
+        }
+    }
+
+
+    /**
+     * 移动数据
+     *
+     * @param fromPosition 被移动数据位置
+     * @param toPosition   目标位置
+     */
+    public void moveSearchAndUpdata(int fromPosition, int toPosition) {
+        D form = mArrayModelSearch.remove(fromPosition);
+        mArrayModelSearch.add(toPosition, form);
         broadcastDataChange();
         if ((mFlag & FLAG_DISABLE_ITEM_ANIMATOR_MOVE) != 0) {
             notifyDataSetChanged();
@@ -286,11 +535,13 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
 
     /*获得下标对应位置数据*/
     public D getItemData(int postion) {
+        if (isSearched()) return mArrayModelSearch.get(postion);
         return mArrayModel.get(postion);
     }
 
     @Override
     public int getItemCount() {
+        if (isSearched()) return mArrayModelSearch.size();
         return mArrayModel.size();
     }
 
@@ -332,32 +583,56 @@ public abstract class BaseRecyclerViewAdapter<D> extends RecyclerView.Adapter<Ba
          * @param what 消息类型
          * @param obj  消息中携带数据
          */
-        protected void sendMessage(int what, Object obj) {
-            ViewHolderMessageHandler l = mAdapter.mViewHolderMessageHandler;
-            if (l != null) {
-                l.handlerAdapterMessage(what, obj);
-            } else new NullPointerException("未设置ViewHolderMessageHandler!");
+        protected final void sendMessage(final int what, final Object obj) {
+            Utils.map(mAdapter.mViewHolderMessageHandler, new Utils.Action1<ViewHolderMessageHandler>() {
+                @Override
+                public void call(ViewHolderMessageHandler viewHolderMessageHandler) {
+                    viewHolderMessageHandler.handlerAdapterMessage(what, obj, getAdapterPosition());
+                }
+            });
         }
     }
 
     /**
-     * 监听适配器的数据变化
+     * 适配器的数据变化监听器,当Set，Add，Remove方法被调用的时候，该监听器能接收到反馈
      */
-    public interface OnAdapterDataChange<D> {
+    public interface OnAdapterDataChangeListener<D> {
+        /**
+         * 当Adapter数据变化的时候
+         *
+         * @param adapter The adapter
+         */
         void onChange(BaseRecyclerViewAdapter<D> adapter);
     }
 
     /**
-     * ViewHolder变化监听
+     * ViewHolder消息观察者，用于接收来自ViewHolder通过sendMessage()方法发出的消息
      */
     public interface ViewHolderMessageHandler<E> {
 
         /**
-         * @param what 消息类型
-         * @param obj  消息中携带数据
+         * 接收到一条来自ViewHolder的消息
+         *
+         * @param what         消息标记
+         * @param obj          消息中携带数据
+         * @param adapterIndex 该ViewHolder在Adapter中的位置
          */
-        void handlerAdapterMessage(int what, E obj);
+        void handlerAdapterMessage(int what, E obj, int adapterIndex);
 
     }
 
+    /**
+     * 当点击Item的时候回调
+     */
+    public interface OnItemClickListener<T> {
+        /**
+         * 当点击了Item回调
+         *
+         * @param parent   The adapter
+         * @param view     The view of ViewHolder
+         * @param position The view item
+         * @param id
+         */
+        void onItemClick(BaseRecyclerViewAdapter<T> parent, BaseViewHolder<T> view, int position, long id);
+    }
 }

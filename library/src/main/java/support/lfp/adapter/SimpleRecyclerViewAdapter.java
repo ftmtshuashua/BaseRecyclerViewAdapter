@@ -8,15 +8,29 @@ import androidx.annotation.NonNull;
 import java.lang.reflect.Constructor;
 
 /**
- * 自动创建Adapter，少写几行代码
- * 推荐使用 BaseRecyclerViewAdapter自己实现
- * Created by LiFuPing on 2018/5/11.
+ * <pre>
+ * Tip:
+ *      RecyclerView万能适配器
+ *      自动创建Adapter，少写几行代码
+ *      推荐使用 BaseRecyclerViewAdapter自己实现
+ *
+ * Function:
+ *
+ *
+ * Created by LiFuPing on 2018/5/11
+ * </pre>
  */
 public class SimpleRecyclerViewAdapter<D> extends BaseRecyclerViewAdapter<D> {
 
     Class<? extends BaseViewHolder<D>> cls_vh;
     int layout_resouce_id;
 
+    /**
+     * 创建适配器
+     *
+     * @param vh                为适配器提供一个自定义的ViewHolder类型
+     * @param layout_resouce_id 该ViewHolder使用的资源文件ID
+     */
     public SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>> vh, int layout_resouce_id) {
         this.cls_vh = vh;
         this.layout_resouce_id = layout_resouce_id;

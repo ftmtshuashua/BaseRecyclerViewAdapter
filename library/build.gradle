@@ -15,6 +15,7 @@ android {
 dependencies {
     compileOnly 'androidx.appcompat:appcompat:1.0.2'
     compileOnly 'androidx.recyclerview:recyclerview:1.0.0+'
+
 }
 
 
