@@ -10,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import support.lfp.adapter.BaseLoonRecyclerViewAdapter;
 import support.lfp.adapter.BaseLoonViewHolder;
 import support.lfp.adapter.BaseRecyclerViewAdapter;
+import support.lfp.adapter.BaseViewHolder;
 import support.lfp.adapter.interior.AdapterObservable;
 
 import java.util.ArrayList;
@@ -35,46 +37,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.view_Clear).setOnClickListener(this);
-        findViewById(R.id.view_Set5).setOnClickListener(this);
-        findViewById(R.id.view_S_Set5).setOnClickListener(this);
-        findViewById(R.id.view_Set10).setOnClickListener(this);
-        findViewById(R.id.view_S_Set10).setOnClickListener(this);
-        findViewById(R.id.view_Add1).setOnClickListener(this);
-        findViewById(R.id.view_S_Add1).setOnClickListener(this);
-        findViewById(R.id.view_Add2).setOnClickListener(this);
-        findViewById(R.id.view_S_Add2).setOnClickListener(this);
-        findViewById(R.id.view_Insert1_1).setOnClickListener(this);
-        findViewById(R.id.view_S_Insert1_1).setOnClickListener(this);
-        findViewById(R.id.view_Insert1_2).setOnClickListener(this);
-        findViewById(R.id.view_S_Insert1_2).setOnClickListener(this);
-        findViewById(R.id.view_Remove0).setOnClickListener(this);
-        findViewById(R.id.view_S_Remove0).setOnClickListener(this);
-        findViewById(R.id.view_Move1_3).setOnClickListener(this);
-        findViewById(R.id.view_S_Move1_3).setOnClickListener(this);
+        initClick();
 
         RecyclerView recyclerView = findViewById(R.id.view_RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-//        recyclerView.setItemAnimator(new SlideInLeftAnimator());
+        recyclerView.setItemAnimator(new SlideInLeftAnimator());
+//        mAdapter.disableItemAnimation(); //禁用动画效果
 
+
+//        recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId)); //懒人方式加载
         recyclerView.setAdapter(mAdapter = new MyAdapter());
 
 
-//        recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId));
-
-//        mAdapter.disableItemAnimation();
-        mAdapter.setOnItemClickListener(new AdapterObservable.OnItemClickListener<String>() {
-            @Override
-            public void onItemClick(AdapterObservable<String> adapter, RecyclerView.ViewHolder viewHolder, int position) {
-                Log.e("MainActivity", "点击项目：" + position);
-            }
-        });
-
+        mAdapter.setOnItemClickListener(mOnItemClick);
+        mAdapter.setOnItemLongClickListener(mOnItemLongClick);
     }
 
-
-    //        Log.e("Tag", "执行："+ (  (mFlag & FLAG_DISABLE_ITEM_ANIMATOR_SET) != 0 ));
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -152,26 +131,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//            Log.e("Tag" , "Adapter onBindViewHolder:"+(   head_cound  ));
-
-    /*生成数据*/
-    static String generateString(String tag) {
-        return generateString(tag, 1).get(0);
-    }
-
-    static List<String> generateString(String tag, int count) {
-        List<String> array = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            array.add(tag + i);
+    AdapterObservable.OnItemClickListener mOnItemClick = new AdapterObservable.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterObservable adapter, BaseViewHolder viewHolder, View view, int position) {
+            Toast("点击 ：" + position);
         }
-        return array;
-    }
-
-    public void Toast(String msg) {
-        Log.e("Tag", msg);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
+    };
+    AdapterObservable.OnItemLongClickListener mOnItemLongClick = new AdapterObservable.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterObservable adapter, BaseViewHolder viewHolder, View view, int position) {
+            Toast("长按 ：" + position);
+            return true;
+        }
+    };
 
     //懒人版Adapter
     private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
@@ -187,5 +159,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    //    <editor-fold desc="测试方法">
+    void initClick() {
+
+        findViewById(R.id.view_Clear).setOnClickListener(this);
+        findViewById(R.id.view_Set5).setOnClickListener(this);
+        findViewById(R.id.view_S_Set5).setOnClickListener(this);
+        findViewById(R.id.view_Set10).setOnClickListener(this);
+        findViewById(R.id.view_S_Set10).setOnClickListener(this);
+        findViewById(R.id.view_Add1).setOnClickListener(this);
+        findViewById(R.id.view_S_Add1).setOnClickListener(this);
+        findViewById(R.id.view_Add2).setOnClickListener(this);
+        findViewById(R.id.view_S_Add2).setOnClickListener(this);
+        findViewById(R.id.view_Insert1_1).setOnClickListener(this);
+        findViewById(R.id.view_S_Insert1_1).setOnClickListener(this);
+        findViewById(R.id.view_Insert1_2).setOnClickListener(this);
+        findViewById(R.id.view_S_Insert1_2).setOnClickListener(this);
+        findViewById(R.id.view_Remove0).setOnClickListener(this);
+        findViewById(R.id.view_S_Remove0).setOnClickListener(this);
+        findViewById(R.id.view_Move1_3).setOnClickListener(this);
+        findViewById(R.id.view_S_Move1_3).setOnClickListener(this);
+    }
+
+    /*生成数据*/
+    static String generateString(String tag) {
+        return generateString(tag, 1).get(0);
+    }
+
+    static List<String> generateString(String tag, int count) {
+        List<String> array = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            array.add(tag + i);
+        }
+        return array;
+    }
+
+    void Toast(String msg) {
+        Log.e("Tag", msg);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+//    </editor-fold>
 
 }

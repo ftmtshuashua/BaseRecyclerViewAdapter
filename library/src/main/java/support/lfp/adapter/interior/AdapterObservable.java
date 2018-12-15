@@ -1,9 +1,7 @@
 package support.lfp.adapter.interior;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.View;
 import support.lfp.adapter.BaseViewHolder;
-import support.lfp.adapter.RecyclerViewItemTouchHelper;
 import support.lfp.adapter.utils.Utils;
 
 import java.util.ArrayList;
@@ -25,10 +23,10 @@ public abstract class AdapterObservable<D> extends AdapterSearchDataManager<D> {
     private OnAdapterDataChangeListener mOnAdapterDataChangeListener;
     /* ViewHolder消息处理器 */
     private ArrayList<ViewHolderMessageHandler> mViewHolderMessageHandler = new ArrayList<>();
-    private RecyclerViewItemTouchHelper mRecyclerViewItemTouchHelper;
     /* ItemView点击事件监听 */
     private OnItemClickListener mOnItemClickListener;
-
+    /*ItemView长按事件监听*/
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     /**
      * 设置ItemView点击事件监听
@@ -41,6 +39,15 @@ public abstract class AdapterObservable<D> extends AdapterSearchDataManager<D> {
 
     public OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
+    }
+
+
+    public void setOnItemLongClickListener(OnItemLongClickListener<? super D> l) {
+        mOnItemLongClickListener = l;
+    }
+
+    public OnItemLongClickListener getOnItemLongClickListener() {
+        return mOnItemLongClickListener;
     }
 
     /**
@@ -70,47 +77,14 @@ public abstract class AdapterObservable<D> extends AdapterSearchDataManager<D> {
     }
 
 
+    /*Item点击监听*/
     public interface OnItemClickListener<D> {
-        void onItemClick(AdapterObservable<D> adapter, RecyclerView.ViewHolder viewHolder, int position);
+        void onItemClick(AdapterObservable<D> adapter, BaseViewHolder<D> viewHolder, View view, int position);
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        mRecyclerViewItemTouchHelper = new RecyclerViewItemTouchHelper(recyclerView);
-        mRecyclerViewItemTouchHelper.setOnItemClickListener(new RecyclerViewItemTouchHelper.OnItemClickListener() {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder viewHolder, int position) {
-                performItemClick((BaseViewHolder) viewHolder);
-            }
-        });
-        mRecyclerViewItemTouchHelper.setOnItemLongClickListener(new RecyclerViewItemTouchHelper.OnItemLongClickListener() {
-            @Override
-            public void onItemLongClick(RecyclerView.ViewHolder viewHolder, int position) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        mRecyclerViewItemTouchHelper.clear();
-        mRecyclerViewItemTouchHelper = null;
-    }
-
-    /**
-     * 调用OnItemClickListener监听
-     *
-     * @param view
-     * @return 是否成功调用
-     */
-    protected boolean performItemClick(BaseViewHolder view) {
-        if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(this, view, view.getAdapterPosition());
-            return true;
-        }
-        return false;
+    /*Item长按事件监听*/
+    public interface OnItemLongClickListener<D> {
+        boolean onItemLongClick(AdapterObservable<D> adapter, BaseViewHolder<D> viewHolder, View view, int position);
     }
 
     /**
