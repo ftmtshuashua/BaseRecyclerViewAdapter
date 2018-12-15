@@ -1,14 +1,15 @@
 # BaseRecyclerViewAdapter
-1.BaseRecyclerViewAdapter内部维护多个数据集合，当数据发生变化的时候会自动更行Adapter。
-2.提供数据变化监听器OnAdapterDataChangeListener，当数据发生变化的时候
-3.已适配AndroidX
+>BaseRecyclerViewAdapter内部维护多个数据集合，当数据发生变化的时候会自动更行Adapter。
+>Adapter数据变化监听器OnAdapterDataChangeListener
+>ViewHolder消息
+>已适配AndroidX
 
 ## BaseRecyclerViewAdapter
 内部维护多个数据集合，它会根据数据的变化自动更新UI
-set()
-add()
-insert()
-move()
+>set()
+>add()
+>insert()
+>move()
 
 ## 数据变化监听
 为Adapter设置OnAdapterDataChangeListener，可以观察Adapter中数据的变化.
