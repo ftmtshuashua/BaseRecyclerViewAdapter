@@ -1,9 +1,53 @@
 # BaseRecyclerViewAdapter
-一个RecyclerView适配器
->已适配AndroidX
+1.BaseRecyclerViewAdapter内部维护多个数据集合，当数据发生变化的时候会自动更行Adapter。
+2.提供数据变化监听器OnAdapterDataChangeListener，当数据发生变化的时候
+3.已适配AndroidX
 
-## 使用
-请参考：[ARDF](https://github.com/ftmtshuashua/ARDF)的适配器部分
+## BaseRecyclerViewAdapter
+内部维护多个数据集合，它会根据数据的变化自动更新UI
+set()
+add()
+insert()
+move()
+
+## 数据变化监听
+为Adapter设置OnAdapterDataChangeListener，可以观察Adapter中数据的变化.
+也可以在Adapter或者ViewHolder中调用notifyDataChange来显示的通知数据变化
+
+## ViewHolder消息
+通过给Adapter设置addViewHolderMessageHandler来获取来自ViewHolder的消息.
+在ViewHolder中通过sendMessage方法发送消息
+
+
+## 懒人版 BaseLoonRecyclerViewAdapter于SimpleRecyclerViewAdapter
+BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
+```
+    private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
+        public MyAdapter() {
+            super(R.layout.layout_textview);
+        }
+
+        @Override
+        public void convert(BaseLoonViewHolder<String> helper, String data) {
+            if (TextUtils.isEmpty(data)) {
+                helper.setText(R.id.view_Info, "IS  NULL  ！！");
+            } else helper.setText(R.id.view_Info, data);
+        }
+    }
+```
+使用方式:
+```
+recyclerView.setAdapter(new MyAdapter());
+```
+
+
+SimpleRecyclerViewAdapter允许不自定义Adapter。
+使用方式:
+```
+recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId));
+```
+
+
 
 ## 配置依赖
 
@@ -15,10 +59,10 @@ allprojects {
     }
 }
 ```
-在Model的build.gradle中添加
+在Model的build.gradle中添加 [![](https://jitpack.io/v/ftmtshuashua/BaseRecyclerViewAdapter.svg)](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
 ```
 dependencies {
-    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:v1.0.1'
+    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:version'
 }
 ```
 该项目在AndroidX基础上搭建,需要以下库
@@ -27,7 +71,7 @@ implementation 'androidx.recyclerview:recyclerview:version'
 implementation 'androidx.appcompat:appcompat:version'
 ```
 
-如果启用了混淆
+使用了SimpleRecyclerViewAdapter需要添加混淆配置
 
 ```
 -keep class support.lfp.adapter.BaseRecyclerViewAdapter$BaseViewHolder {* ;}
