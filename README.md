@@ -1,19 +1,34 @@
 # BaseRecyclerViewAdapter
 >BaseRecyclerViewAdapter内部维护多个数据集合，当数据发生变化的时候会自动更行Adapter。
+
 >Adapter数据变化监听器OnAdapterDataChangeListener
+
 >ViewHolder消息
+
 >已适配AndroidX
 
 ## BaseRecyclerViewAdapter
 内部维护多个数据集合，它会根据数据的变化自动更新UI
 >set()
+
 >add()
+
 >insert()
+
 >move()
 
 ## 数据变化监听
 为Adapter设置OnAdapterDataChangeListener，可以观察Adapter中数据的变化.
 也可以在Adapter或者ViewHolder中调用notifyDataChange来显示的通知数据变化
+
+## Item点击和长按监听
+要使用该功能请保证BaseRecyclerViewConfig.IsEnableItemViewPackage == true,当然它默认就true。
+只需要消耗一点点性能，就能让RecyclerView拥有和ListView一样的Item点击事件监听功能。
+>点击事件监听:Adapter.setOnItemClickListener
+
+>长按事件监听:Adapter.setOnItemLongClickListener
+
+
 
 ## ViewHolder消息
 通过给Adapter设置addViewHolderMessageHandler来获取来自ViewHolder的消息.
