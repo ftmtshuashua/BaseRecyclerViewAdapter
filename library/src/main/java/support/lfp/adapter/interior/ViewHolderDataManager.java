@@ -98,11 +98,7 @@ public abstract class ViewHolderDataManager<D> extends RecyclerView.ViewHolder {
      * @return 数据在数据源中的下标
      */
     public int getDataPosition() {
-        if (getAdapter().isSearched()) {
-            return getAdapter().getSearch().indexOf(getSaveData());
-        } else {
-            return getAdapter().getData().indexOf(getSaveData());
-        }
+        return getAdapter().getData().indexOf(getSaveData());
     }
 
 

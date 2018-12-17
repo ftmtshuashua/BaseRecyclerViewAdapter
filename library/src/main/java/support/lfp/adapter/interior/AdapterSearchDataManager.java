@@ -73,16 +73,16 @@ public abstract class AdapterSearchDataManager<D> extends AdapterDataManager<D> 
 
     public <T extends D> void insertSearch(int index, List<T> data) {
         getSearch().addAll(index, data);
-        if (isEnableItemAnimation()) notifyItemRangeInserted(getItemStartPosition() + index, data.size());
+        if (isEnableItemAnimation()) notifyItemRangeInserted(getNotifyItemOffSet() + index, data.size());
     }
 
     public void removeSearch(int index) {
-        if (isEnableItemAnimation()) notifyItemRangeRemoved(getItemStartPosition() + index, 1);
+        if (isEnableItemAnimation()) notifyItemRangeRemoved(getNotifyItemOffSet() + index, 1);
         getSearch().remove(index);
     }
 
     public void removeSearchAll() {
-        if (isEnableItemAnimation()) notifyItemRangeRemoved(getItemStartPosition(), getSearchCount());
+        if (isEnableItemAnimation()) notifyItemRangeRemoved(getNotifyItemOffSet(), getSearchCount());
         getSearch().clear();
     }
 
@@ -90,7 +90,7 @@ public abstract class AdapterSearchDataManager<D> extends AdapterDataManager<D> 
         D form = getSearch().remove(fromPosition);
         getSearch().add(toPosition, form);
         if (isEnableItemAnimation())
-            notifyItemMoved(fromPosition + getItemStartPosition(), toPosition + getItemStartPosition());
+            notifyItemMoved(fromPosition + getNotifyItemOffSet(), toPosition + getNotifyItemOffSet());
     }
     //</editor-fold>
 
@@ -101,7 +101,7 @@ public abstract class AdapterSearchDataManager<D> extends AdapterDataManager<D> 
     }
 
     @Override
-    public Object findItemData(int position) { //该方法暂未实现
+    public D getDataItem(int position) { //该方法暂未实现
 //        if (isSearched()) {
 //            if (isHeadPosition(position)) {
 //                return mHeadArray.get(position);
@@ -112,12 +112,9 @@ public abstract class AdapterSearchDataManager<D> extends AdapterDataManager<D> 
 //            }
 //            return null;
 //        }
-        return super.findItemData(position);
+        return super.getDataItem(position);
     }
 
-    public D getSearchItem(int index) {
-        return getSearch().get(index);
-    }
 
     /**
      * 获得Searched数据源的数据量

@@ -2,7 +2,6 @@ package support.lfp.adapter.interior;
 
 import android.view.View;
 import support.lfp.adapter.BaseViewHolder;
-import support.lfp.adapter.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  * Created by LiFuPing on 2018/12/10 09:25
  * </pre>
  */
-public abstract class AdapterObservable<D> extends AdapterSearchDataManager<D> {
+public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
 
     /* 数据变化监听 */
     private OnAdapterDataChangeListener mOnAdapterDataChangeListener;

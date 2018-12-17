@@ -1,4 +1,4 @@
-package support.lfp.adapter.utils;
+package support.lfp.adapter.interior;
 
 import androidx.annotation.Nullable;
 
@@ -14,7 +14,7 @@ import java.util.Iterator;
  * Created by LiFuPing on 2018/12/4 16:06
  * </pre>
  */
-public class Utils {
+  class Utils {
     /**
      * 如果这个对象为空这抛出 {@code NullPointerException},否则返回这个对象
      *

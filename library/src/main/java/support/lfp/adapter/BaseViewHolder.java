@@ -1,7 +1,7 @@
 package support.lfp.adapter;
 
-import android.graphics.Color;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import support.lfp.adapter.interior.ViewHolderCacheManager;
 
@@ -27,15 +27,13 @@ public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {
     }
 
     /*在ItemView的外面包裹一层，便于点击事件设置监听*/
-    private static View packageItemView(View itemView) {
+    private static final View packageItemView(View itemView) {
         if (itemView == null) return itemView;
         if (BaseRecyclerViewConfig.IsEnableItemViewPackage) {
             FrameLayout frameLayout = new FrameLayout(itemView.getContext());
-            frameLayout.setBackgroundColor(Color.RED);
+            frameLayout.setLayoutParams(new ViewGroup.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
             frameLayout.setId(ITEMVIEW_PACKAGE_VIEW_ID);
-            frameLayout.addView(itemView
-                    ,new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.WRAP_CONTENT )
-            );
+            frameLayout.addView(itemView);
             return frameLayout;
         } else {
             return itemView;
@@ -49,11 +47,11 @@ public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {
         mViewHolderOnClickTransfer = null;
     }
 
-    public void setViewHolderOnClickTransfer(ViewHolderOnClickTransfer l) {
+    protected final void setViewHolderOnClickTransfer(ViewHolderOnClickTransfer l) {
         mViewHolderOnClickTransfer = l;
     }
 
-    public ViewHolderOnClickTransfer getViewHolderOnClickTransfer() {
+    protected final ViewHolderOnClickTransfer getViewHolderOnClickTransfer() {
         return mViewHolderOnClickTransfer;
     }
 

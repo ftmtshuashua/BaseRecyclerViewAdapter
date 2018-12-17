@@ -6,12 +6,12 @@ import java.util.LinkedList;
  * <pre>
  * Tip:
  *      线程安全的对象复用工具
- *      Come form https://github.com/ftmtshuashua/ToolKit
+ *      Link come from https://github.com/ftmtshuashua/ToolKit
  *
  * Function:
  *      obtain()    :获得一个实例
  *      recycle()   :回收实例
- *      create()    :创建实例
+ *      create()    :创建实例(重构)
  *
  * Created by LiFuPing on 2018/6/26.
  *

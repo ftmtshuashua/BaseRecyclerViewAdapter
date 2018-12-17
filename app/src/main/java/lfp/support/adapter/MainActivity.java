@@ -58,35 +58,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.view_Clear:
-                mAdapter.removeSearchAll();
+//                mAdapter.removeSearchAll();
                 mAdapter.removeAll();
                 break;
             case R.id.view_ClearSearch:
-                mAdapter.removeSearchAll();
+//                mAdapter.removeSearchAll();
                 break;
             case R.id.view_Set5:
                 mAdapter.set(generateString("Set5:", 5));
                 break;
             case R.id.view_S_Set5:
-                mAdapter.setSearch(generateString("搜索_Set5:", 5));
+//                mAdapter.setSearch(generateString("搜索_Set5:", 5));
                 break;
             case R.id.view_Set10:
                 mAdapter.set(generateString("Set10:", 10));
                 break;
             case R.id.view_S_Set10:
-                mAdapter.setSearch(generateString("搜索_Set10:", 10));
+//                mAdapter.setSearch(generateString("搜索_Set10:", 10));
                 break;
             case R.id.view_Add1:
                 mAdapter.add(generateString("Add1:"));
                 break;
             case R.id.view_S_Add1:
-                mAdapter.addSearch(generateString("搜索_Add1:"));
+//                mAdapter.addSearch(generateString("搜索_Add1:"));
                 break;
             case R.id.view_Add2:
                 mAdapter.add(generateString("Add2:", 2));
                 break;
             case R.id.view_S_Add2:
-                mAdapter.addSearch(generateString("搜索_Add2:", 2));
+//                mAdapter.addSearch(generateString("搜索_Add2:", 2));
                 break;
             case R.id.view_Insert1_1:
                 if (mAdapter.getDataCount() == 0) {
@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else mAdapter.insert(1, generateString("Insert1_1:"));
                 break;
             case R.id.view_S_Insert1_1:
-                if (mAdapter.getSearchCount() == 0) {
-                    Toast("请保证适配中至少有1条数据 !");
-                } else mAdapter.insertSearch(1, generateString("搜索_Insert1_1:"));
+//                if (mAdapter.getSearchCount() == 0) {
+//                    Toast("请保证适配中至少有1条数据 !");
+//                } else mAdapter.insertSearch(1, generateString("搜索_Insert1_1:"));
                 break;
             case R.id.view_Insert1_2:
                 if (mAdapter.getDataCount() == 0) {
@@ -104,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else mAdapter.insert(1, generateString("Insert1_2:", 2));
                 break;
             case R.id.view_S_Insert1_2:
-                if (mAdapter.getSearchCount() == 0) {
-                    Toast("请保证适配中至少有1条数据 !");
-                } else mAdapter.insertSearch(1, generateString("搜索_Insert1_2:", 2));
+//                if (mAdapter.getSearchCount() == 0) {
+//                    Toast("请保证适配中至少有1条数据 !");
+//                } else mAdapter.insertSearch(1, generateString("搜索_Insert1_2:", 2));
                 break;
             case R.id.view_Remove0:
                 if (mAdapter.getDataCount() == 0) {
@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else mAdapter.remove(0);
                 break;
             case R.id.view_S_Remove0:
-                if (mAdapter.getSearchCount() == 0) {
-                    Toast("适配器中已经无Search数据了 !");
-                } else mAdapter.removeSearch(0);
+//                if (mAdapter.getSearchCount() == 0) {
+//                    Toast("适配器中已经无Search数据了 !");
+//                } else mAdapter.removeSearch(0);
                 break;
             case R.id.view_Move1_3:
                 if (mAdapter.getDataCount() < 4) {
@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else mAdapter.move(1, 3);
                 break;
             case R.id.view_S_Move1_3:
-                if (mAdapter.getSearchCount() < 4) {
-                    Toast("数据不够无法将 （1 -> 3） !");
-                } else mAdapter.moveSearch(1, 3);
+//                if (mAdapter.getSearchCount() < 4) {
+//                    Toast("数据不够无法将 （1 -> 3） !");
+//                } else mAdapter.moveSearch(1, 3);
                 break;
         }
     }
@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void initClick() {
 
         findViewById(R.id.view_Clear).setOnClickListener(this);
+        findViewById(R.id.view_ClearSearch).setOnClickListener(this);
         findViewById(R.id.view_Set5).setOnClickListener(this);
         findViewById(R.id.view_S_Set5).setOnClickListener(this);
         findViewById(R.id.view_Set10).setOnClickListener(this);
@@ -180,6 +181,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.view_S_Remove0).setOnClickListener(this);
         findViewById(R.id.view_Move1_3).setOnClickListener(this);
         findViewById(R.id.view_S_Move1_3).setOnClickListener(this);
+
+        //暂时未实现搜索模式
+        findViewById(R.id.view_ClearSearch).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Set5).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Set10).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Add1).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Add2).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Insert1_1).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Insert1_2).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Remove0).setVisibility(View.GONE);
+        findViewById(R.id.view_S_Move1_3).setVisibility(View.GONE);
     }
 
     /*生成数据*/

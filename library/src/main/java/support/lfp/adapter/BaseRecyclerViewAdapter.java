@@ -27,7 +27,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
         if (getOnItemClickListener() != null || getOnItemLongClickListener() != null) {
             if (BaseRecyclerViewConfig.IsEnableItemViewPackage && holder != null && holder.itemView != null && holder.itemView instanceof ViewGroup) {
                 View contentView = ((ViewGroup) holder.itemView).getChildAt(0);
-                ViewHolderOnClickTransfer mViewHolderOnClickTransfer = generateViewHolderOnClickTransfer(this, holder, position);
+                ViewHolderOnClickTransfer mViewHolderOnClickTransfer = generateViewHolderOnClickTransfer(this, holder);
                 if (getOnItemClickListener() != null) {
                     contentView.setOnClickListener(mViewHolderOnClickTransfer);
                 }
@@ -37,7 +37,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
                 holder.setViewHolderOnClickTransfer(mViewHolderOnClickTransfer);
             }
         }
-        holder.setUpdataData(this, (D) findItemData(position));
+        holder.setUpdataData(this, (D) getDataItem(position));
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
     }
 
 
-    public static final ViewHolderOnClickTransfer generateViewHolderOnClickTransfer(BaseRecyclerViewAdapter adapter, BaseViewHolder holder, int position) {
+    public static final ViewHolderOnClickTransfer generateViewHolderOnClickTransfer(BaseRecyclerViewAdapter adapter, BaseViewHolder holder) {
         //<editor-fold desc="对象生成">
         if (mObjectCacheUtils == null) {
             mObjectCacheUtils = new ObjectCacheUtils<Object, ViewHolderOnClickTransfer>() {
@@ -64,7 +64,6 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
         ViewHolderOnClickTransfer mViewHolderOnClickTransfer = mObjectCacheUtils.obtain();
         mViewHolderOnClickTransfer.mAdapter = adapter;
         mViewHolderOnClickTransfer.mHolder = holder;
-        mViewHolderOnClickTransfer.position = position;
         return mViewHolderOnClickTransfer;
     }
 

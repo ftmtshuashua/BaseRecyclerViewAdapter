@@ -27,18 +27,29 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      */
     public static final int FLAG_DISABLE_ITEM_ANIMATOR = 0x00000001;
 
-    /*头部数据源*/
-    private List mHeadArray;
-    /*脚步数据源*/
-    private List mFootArray;
-
-
-//    private Map<Integer , >
-
     /* 用于列表中显示数据 */
     private final List<D> mDataArray = new ArrayList<>();
-
     private int mFlag;
+    /*
+     * 设置notify方法的偏移量，当数据源改变需要通知Adapter刷新UI，为刷新的UI的位置设置一个偏移量     *
+     * 允许在某些情况比如顶部增加一个和数据源相对独立的数据，这个时候数据源中下标为0的数据刷新UI的时候需要调用notify(1)
+     *
+     */
+    private int mNotifyItemOffSet = 0;
+
+
+    /**
+     * 设置刷新偏移量
+     *
+     * @param offset 偏移量
+     */
+    public void setNotifyItemOffSet(int offset) {
+        this.mNotifyItemOffSet = offset;
+    }
+
+    public int getNotifyItemOffSet() {
+        return mNotifyItemOffSet;
+    }
 
     /**
      * 获得Adapter行为配置
@@ -69,14 +80,6 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         return (mFlag & FLAG_DISABLE_ITEM_ANIMATOR) == 0;
     }
 
-    /**
-     * 获得源数据
-     *
-     * @return List
-     */
-    public List<D> getData() {
-        return mDataArray;
-    }
 
     /*----------- 数据操作 -----------*/
     //<editor-fold desc="Set() |  Add()  |  Insert()  || Move()">
@@ -103,16 +106,16 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 
     public <T extends D> void insert(int index, List<T> data) {
         getData().addAll(index, data);
-        if (isEnableItemAnimation()) notifyItemRangeInserted(getItemStartPosition() + index, data.size());
+        if (isEnableItemAnimation()) notifyItemRangeInserted(mNotifyItemOffSet + index, data.size());
     }
 
     public void remove(int index) {
-        if (isEnableItemAnimation()) notifyItemRangeRemoved(getItemStartPosition() + index, 1);
+        if (isEnableItemAnimation()) notifyItemRangeRemoved(mNotifyItemOffSet + index, 1);
         getData().remove(index);
     }
 
     public void removeAll() {
-        if (isEnableItemAnimation()) notifyItemRangeRemoved(getItemStartPosition(), getDataCount());
+        if (isEnableItemAnimation()) notifyItemRangeRemoved(mNotifyItemOffSet, getDataCount());
         getData().clear();
     }
 
@@ -120,119 +123,47 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         D form = getData().remove(fromPosition);
         getData().add(toPosition, form);
         if (isEnableItemAnimation())
-            notifyItemMoved(fromPosition + getItemStartPosition(), toPosition + getItemStartPosition());
+            notifyItemMoved(fromPosition + mNotifyItemOffSet, toPosition + mNotifyItemOffSet);
     }
     //</editor-fold>
 
     @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public int getItemCount() {
-        return getHeadCount() + getDataCount() + getFootCount();
+        return getDataCount();
     }
 
     /**
-     * 获得下标对应位置数据
+     * 获得数据源集合对象
      */
-    protected Object findItemData(int position) {
-        if (isHeadPosition(position)) {
-            return getHeadItem(position);
-        } else if (isItemPoistion(position)) {
-            return getDataItem(getItemPosition(position));
-        } else if (isFootPoistion(position)) {
-            return getFootItem(position - getItemEndPosition());
-        }
-        return null;
+    public List<D> getData() {
+        return mDataArray;
     }
 
     /**
-     * 根据Data数据源下标获得数据对象
+     * 获得数据源中下标对应位置的数据
      *
-     * @param index 数据再Data中的下标
-     * @return
+     * @param index 下标
      */
-    public D getDataItem(int index) {
+    protected D getDataItem(int index) {
         return getData().get(index);
     }
 
-    public Object getHeadItem(int index) {
-        return mHeadArray.get(index);
-    }
-
-    public Object getFootItem(int index) {
-        return mFootArray.get(index);
-    }
-
-    public int getItemPosition(int position) {
-        return position - getHeadCount();
-    }
-
     /**
-     * 判断Position是否属于HeadView
-     *
-     * @param position
-     * @return
-     */
-    protected boolean isHeadPosition(int position) {
-        return position < getHeadCount();
-    }
-
-    /**
-     * 判断Position是否属于HeadView
-     *
-     * @param position
-     * @return
-     */
-    protected boolean isItemPoistion(int position) {
-        final int count_head = getHeadCount();
-        final int count_item = getDataCount();
-        return count_head <= position && position < (count_head + count_item);
-    }
-
-    /**
-     * 判断Position是否属于HeadView
-     *
-     * @param position
-     * @return
-     */
-    protected boolean isFootPoistion(int position) {
-        final int count_head = getHeadCount();
-        final int count_item = getDataCount();
-        final int count_foot = getFootCount();
-        return (count_head + count_item) <= position && position < (count_head + count_item + count_foot);
-    }
-
-    /**
-     * 获得数据源的数据量
+     * 获得数据源中数据的数量
      */
     public int getDataCount() {
         return mDataArray == null ? 0 : mDataArray.size();
     }
 
-    /**
-     * 获得头部数据数量
-     */
-    public int getHeadCount() {
-        return mHeadArray == null ? 0 : mHeadArray.size();
-    }
-
-    /**
-     * 获得底部数据数量
-     */
-    public int getFootCount() {
-        return mFootArray == null ? 0 : mFootArray.size();
-    }
-
-    /**
-     * 获得Item数据的起始坐标点
-     */
-    protected int getItemStartPosition() {
-        return getHeadCount();
-    }
-
-    /**
-     * 获得Item数据的结束坐标点
-     */
-    protected int getItemEndPosition() {
-        return getItemStartPosition() + getDataCount();
-    }
 
 }

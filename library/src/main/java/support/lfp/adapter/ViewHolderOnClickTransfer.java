@@ -12,10 +12,9 @@ import android.view.View;
  * Created by LiFuPing on 2018/12/15 17:43
  * </pre>
  */
-public class ViewHolderOnClickTransfer implements View.OnClickListener, View.OnLongClickListener {
+public final class ViewHolderOnClickTransfer implements View.OnClickListener, View.OnLongClickListener {
     BaseRecyclerViewAdapter mAdapter;
     BaseViewHolder mHolder;
-    int position;
 
     public ViewHolderOnClickTransfer() {
     }
@@ -23,14 +22,14 @@ public class ViewHolderOnClickTransfer implements View.OnClickListener, View.OnL
     @Override
     public void onClick(View v) {
         if (mAdapter.getOnItemClickListener() != null) {
-            mAdapter.getOnItemClickListener().onItemClick(mAdapter, mHolder, v, position);
+            mAdapter.getOnItemClickListener().onItemClick(mAdapter, mHolder, v, mHolder.getAdapterPosition());
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
         if (mAdapter.getOnItemLongClickListener() != null) {
-            return mAdapter.getOnItemLongClickListener().onItemLongClick(mAdapter, mHolder, v, position);
+            return mAdapter.getOnItemLongClickListener().onItemLongClick(mAdapter, mHolder, v, mHolder.getAdapterPosition());
         }
         return false;
     }
