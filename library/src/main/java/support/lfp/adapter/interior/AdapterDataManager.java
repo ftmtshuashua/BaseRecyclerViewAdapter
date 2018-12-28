@@ -141,6 +141,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * @param <T>   数据集合中数据类型是一个<D>类型
      */
     public <T extends D> void insert(int index, List<T> data) {
+        if (data == null) return;
         getData().addAll(index, data);
         if (isEnableItemAnimation()) {
             final int start = mNotifyItemOffSet + index;
