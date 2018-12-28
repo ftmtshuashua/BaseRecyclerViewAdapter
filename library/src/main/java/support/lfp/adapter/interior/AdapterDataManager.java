@@ -83,27 +83,63 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 
     /*----------- 数据操作 -----------*/
     //<editor-fold desc="Set() |  Add()  |  Insert()  || Move()">
+
+    /**
+     * 使用一条数据替换数据源
+     *
+     * @param data 替换数据
+     */
     public void set(D data) {
         set(Arrays.asList(data));
     }
 
+    /**
+     * 使用一组集合数据替换数据源
+     *
+     * @param data 添加数据
+     * @param <T>  数据集合中数据类型是一个<D>类型
+     */
     public <T extends D> void set(List<T> data) {
         if (getDataCount() > 0) removeAll();
         add(data);
     }
 
+    /**
+     * 在数据源的末尾添加一条数据
+     *
+     * @param data 添加的数据
+     */
     public void add(D data) {
         add(Arrays.asList(data));
     }
 
+    /**
+     * 在数据源的末尾添加一组数据
+     *
+     * @param data 添加数据
+     * @param <T>  数据集合中数据类型是一个<D>类型
+     */
     public <T extends D> void add(List<T> data) {
         insert(getDataCount(), data);
     }
 
+    /**
+     * 在Index位置插入一条数据
+     *
+     * @param index 数据插入位置
+     * @param data  插入的数据
+     */
     public void insert(int index, D data) {
         insert(index, Arrays.asList(data));
     }
 
+    /**
+     * 在Index位置插入一组数据
+     *
+     * @param index 数据插入位置
+     * @param data  插入的数据集合
+     * @param <T>   数据集合中数据类型是一个<D>类型
+     */
     public <T extends D> void insert(int index, List<T> data) {
         getData().addAll(index, data);
         if (isEnableItemAnimation()) {
@@ -116,18 +152,39 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         }
     }
 
+    /**
+     * 移除Index位置的数据
+     *
+     * @param index 被移除数据的位置
+     */
     public void remove(int index) {
+        remove(index, 1);
+    }
+
+    /**
+     * 移除从index开始的count条数据
+     *
+     * @param index 被移除数据的起点位置
+     * @param count 被移除数据条数
+     */
+    public void remove(int index, int count) {
         if (isEnableItemAnimation()) {
             final int start = mNotifyItemOffSet + index;
-            final int size = 1;
+            final int size = count;
             notifyItemRangeRemoved(start, size);
 //            final int start_last = start;
 //            final int size_last = getItemCount() - start_last;
 //            notifyItemRangeChanged(start_last, size_last);
         }
-        getData().remove(index);
+
+        for (int i = index + count - 1; i >= index; i--) {
+            getData().remove(i);
+        }
     }
 
+    /**
+     * 移除所有数据
+     */
     public void removeAll() {
         if (isEnableItemAnimation()) {
             notifyItemRangeRemoved(mNotifyItemOffSet, getDataCount());
@@ -135,11 +192,17 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         getData().clear();
     }
 
-    public void move(int fromPosition, int toPosition) {
-        D form = getData().remove(fromPosition);
-        getData().add(toPosition, form);
+    /**
+     * 移动数据位置
+     *
+     * @param fromIndex 被移动数据的位置
+     * @param toIndex   希望移动到哪里
+     */
+    public void move(int fromIndex, int toIndex) {
+        D form = getData().remove(fromIndex);
+        getData().add(toIndex, form);
         if (isEnableItemAnimation())
-            notifyItemMoved(fromPosition + mNotifyItemOffSet, toPosition + mNotifyItemOffSet);
+            notifyItemMoved(fromIndex + mNotifyItemOffSet, toIndex + mNotifyItemOffSet);
     }
     //</editor-fold>
 
