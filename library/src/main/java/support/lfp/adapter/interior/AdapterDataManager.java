@@ -150,6 +150,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 //            final int size_last = getItemCount() - start_last;
 //            notifyItemRangeChanged(start_last, size_last);
         }
+        onOperationDataOrigin();
     }
 
     /**
@@ -180,6 +181,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         for (int i = index + count - 1; i >= index; i--) {
             getData().remove(i);
         }
+        onOperationDataOrigin();
     }
 
     /**
@@ -190,6 +192,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
             notifyItemRangeRemoved(mNotifyItemOffSet, getDataCount());
         }
         getData().clear();
+        onOperationDataOrigin();
     }
 
     /**
@@ -201,8 +204,10 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
     public void move(int fromIndex, int toIndex) {
         D form = getData().remove(fromIndex);
         getData().add(toIndex, form);
-        if (isEnableItemAnimation())
+        if (isEnableItemAnimation()) {
             notifyItemMoved(fromIndex + mNotifyItemOffSet, toIndex + mNotifyItemOffSet);
+        }
+        onOperationDataOrigin();
     }
     //</editor-fold>
 
@@ -245,4 +250,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
     }
 
 
+    /*当数据源被操作的时候被调用*/
+    protected void onOperationDataOrigin() {
+    }
 }

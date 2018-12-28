@@ -4,7 +4,6 @@ import android.view.View;
 import support.lfp.adapter.BaseViewHolder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <pre>
@@ -137,26 +136,9 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
     }
 
     @Override
-    public <T extends D> void insert(int index, List<T> data) {
-        super.insert(index, data);
+    protected void onOperationDataOrigin() {
+        super.onOperationDataOrigin();
         notifyDataChange();
     }
 
-    @Override
-    public void remove(int index) {
-        super.remove(index);
-        notifyDataChange();
-    }
-
-    @Override
-    public void removeAll() {
-        super.removeAll();
-        notifyDataChange();
-    }
-
-    @Override
-    public void move(int fromPosition, int toPosition) {
-        super.move(fromPosition, toPosition);
-        notifyDataChange();
-    }
 }
