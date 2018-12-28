@@ -106,16 +106,32 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 
     public <T extends D> void insert(int index, List<T> data) {
         getData().addAll(index, data);
-        if (isEnableItemAnimation()) notifyItemRangeInserted(mNotifyItemOffSet + index, data.size());
+        if (isEnableItemAnimation()) {
+            final int start = mNotifyItemOffSet + index;
+            final int size = data.size();
+            notifyItemRangeInserted(start, size);
+            final int start_last = start + size;
+            final int size_last = getItemCount() - start_last;
+            notifyItemRangeChanged(start_last, size_last);
+        }
     }
 
     public void remove(int index) {
-        if (isEnableItemAnimation()) notifyItemRangeRemoved(mNotifyItemOffSet + index, 1);
+        if (isEnableItemAnimation()) {
+            final int start = mNotifyItemOffSet + index;
+            final int size = 1;
+            notifyItemRangeRemoved(start, size);
+            final int start_last = start;
+            final int size_last = getItemCount() - start_last;
+            notifyItemRangeChanged(start_last, size_last);
+        }
         getData().remove(index);
     }
 
     public void removeAll() {
-        if (isEnableItemAnimation()) notifyItemRangeRemoved(mNotifyItemOffSet, getDataCount());
+        if (isEnableItemAnimation()) {
+            notifyItemRangeRemoved(mNotifyItemOffSet, getDataCount());
+        }
         getData().clear();
     }
 
@@ -154,7 +170,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      *
      * @param index 下标
      */
-    protected D getDataItem(int index) {
+    public D getDataItem(int index) {
         return getData().get(index);
     }
 
