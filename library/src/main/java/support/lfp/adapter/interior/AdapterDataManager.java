@@ -82,7 +82,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 
 
     /*----------- 数据操作 -----------*/
-    //<editor-fold desc="Set() |  Add()  |  Insert()  || Move()">
+    //<editor-fold desc="Set() |  Add()  |  Insert()  || Move() || replace()">
 
     /**
      * 使用一条数据替换数据源
@@ -158,9 +158,10 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * 移除Index位置的数据
      *
      * @param index 被移除数据的位置
+     * @return 被移除的数据
      */
-    public void remove(int index) {
-        remove(index, 1);
+    public D remove(int index) {
+        return remove(index, 1).get(0);
     }
 
     /**
@@ -168,8 +169,9 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      *
      * @param index 被移除数据的起点位置
      * @param count 被移除数据条数
+     * @return 被移除的数据
      */
-    public void remove(int index, int count) {
+    public List<D> remove(int index, int count) {
         if (isEnableItemAnimation()) {
             final int start = mNotifyItemOffSet + index;
             final int size = count;
@@ -178,11 +180,12 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 //            final int size_last = getItemCount() - start_last;
 //            notifyItemRangeChanged(start_last, size_last);
         }
-
+        List<D> removes = new ArrayList<>();
         for (int i = index + count - 1; i >= index; i--) {
-            getData().remove(i);
+            removes.add(getData().remove(i));
         }
         onOperationDataOrigin();
+        return removes;
     }
 
     /**
@@ -209,6 +212,23 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
             notifyItemMoved(fromIndex + mNotifyItemOffSet, toIndex + mNotifyItemOffSet);
         }
         onOperationDataOrigin();
+    }
+
+    /**
+     * 替换数据
+     *
+     * @param index 被替换数据位置
+     * @param data  替换的数据
+     * @return 被替换的数据
+     */
+    public D replace(int index, D data) {
+        final D remove = getData().remove(index);
+        getData().add(index, data);
+        if (isEnableItemAnimation()) {
+            notifyItemChanged(index);
+        }
+        onOperationDataOrigin();
+        return remove;
     }
     //</editor-fold>
 
