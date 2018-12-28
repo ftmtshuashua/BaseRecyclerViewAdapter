@@ -110,9 +110,9 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
             final int start = mNotifyItemOffSet + index;
             final int size = data.size();
             notifyItemRangeInserted(start, size);
-            final int start_last = start + size;
-            final int size_last = getItemCount() - start_last;
-            notifyItemRangeChanged(start_last, size_last);
+//            final int start_last = start + size;
+//            final int size_last = getItemCount() - start_last;
+//            notifyItemRangeChanged(start_last, size_last);
         }
     }
 
@@ -121,9 +121,9 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
             final int start = mNotifyItemOffSet + index;
             final int size = 1;
             notifyItemRangeRemoved(start, size);
-            final int start_last = start;
-            final int size_last = getItemCount() - start_last;
-            notifyItemRangeChanged(start_last, size_last);
+//            final int start_last = start;
+//            final int size_last = getItemCount() - start_last;
+//            notifyItemRangeChanged(start_last, size_last);
         }
         getData().remove(index);
     }

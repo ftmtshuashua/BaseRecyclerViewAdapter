@@ -28,16 +28,17 @@ public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {
 
     /*在ItemView的外面包裹一层，便于点击事件设置监听*/
     private static final View packageItemView(View itemView) {
-        if (itemView == null) return itemView;
-        if (BaseRecyclerViewConfig.IsEnableItemViewPackage) {
+        if (itemView != null && BaseRecyclerViewConfig.IsEnableItemViewPackage) {
+            final ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
+            int width = layoutParams.width;
+            int height = layoutParams.height;
             FrameLayout frameLayout = new FrameLayout(itemView.getContext());
-            frameLayout.setLayoutParams(new ViewGroup.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+            frameLayout.setLayoutParams(new ViewGroup.LayoutParams(width, height));
             frameLayout.setId(ITEMVIEW_PACKAGE_VIEW_ID);
             frameLayout.addView(itemView);
             return frameLayout;
-        } else {
-            return itemView;
         }
+        return itemView;
     }
 
     /**
