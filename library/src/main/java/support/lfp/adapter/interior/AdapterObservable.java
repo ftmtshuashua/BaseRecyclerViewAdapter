@@ -88,7 +88,7 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
     /**
      * 通知数据变化,通过setOnAdapterDataChangeListener方法接收这个通知
      */
-    protected void notifyDataChange() {
+    public void notifyDataChange() {
         if (mOnAdapterDataChangeListener != null) mOnAdapterDataChangeListener.onChange(this);
     }
 
