@@ -19,7 +19,7 @@ import support.lfp.adapter.interior.AdapterObservable;
  */
 public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
 
-    private static ObjectCacheUtils<Object, ViewHolderOnClickTransfer> mObjectCacheUtils;
+    private ObjectCacheUtils<Object, ViewHolderOnClickTransfer> mObjectCacheUtils;
 
 
     @Override
@@ -50,7 +50,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
     }
 
 
-    public static final ViewHolderOnClickTransfer generateViewHolderOnClickTransfer(BaseRecyclerViewAdapter adapter, BaseViewHolder holder) {
+    final ViewHolderOnClickTransfer generateViewHolderOnClickTransfer(BaseRecyclerViewAdapter adapter, BaseViewHolder holder) {
         //<editor-fold desc="对象生成">
         if (mObjectCacheUtils == null) {
             mObjectCacheUtils = new ObjectCacheUtils<Object, ViewHolderOnClickTransfer>() {
@@ -62,6 +62,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
         }
         //</editor-fold>
         ViewHolderOnClickTransfer mViewHolderOnClickTransfer = mObjectCacheUtils.obtain();
+//        if (mViewHolderOnClickTransfer == null) Log.e("BaseRecyclerViewAdapter", "生成对象为空");
         mViewHolderOnClickTransfer.mAdapter = adapter;
         mViewHolderOnClickTransfer.mHolder = holder;
         return mViewHolderOnClickTransfer;
