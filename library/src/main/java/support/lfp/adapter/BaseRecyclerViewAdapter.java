@@ -62,7 +62,6 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
         }
         //</editor-fold>
         ViewHolderOnClickTransfer mViewHolderOnClickTransfer = mObjectCacheUtils.obtain();
-//        if (mViewHolderOnClickTransfer == null) Log.e("BaseRecyclerViewAdapter", "生成对象为空");
         mViewHolderOnClickTransfer.mAdapter = adapter;
         mViewHolderOnClickTransfer.mHolder = holder;
         return mViewHolderOnClickTransfer;
