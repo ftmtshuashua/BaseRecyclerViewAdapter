@@ -5,46 +5,48 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import support.lfp.adapter.interior.AdapterObservable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * <pre>
  * Tip:
  *      RecyclerView万能适配器
  *
+ *
  * Function:
  *      isSearched()            :判断是否为搜索模式
  *
  * Created by LiFuPing on 22018/5/9
+ * @param <D> 数据源类型
  * </pre>
  */
 public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
 
     private ObjectCacheUtils<Object, ViewHolderOnClickTransfer> mObjectCacheUtils;
-
+    private Map<BaseViewHolder, ViewHolderOnClickTransfer> mCacheTransfer;
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder<D> holder, int position) {
         if (getOnItemClickListener() != null || getOnItemLongClickListener() != null) {
             if (BaseRecyclerViewConfig.IsEnableItemViewPackage && holder != null && holder.itemView != null && holder.itemView instanceof ViewGroup) {
-                View contentView = ((ViewGroup) holder.itemView).getChildAt(0);
-                ViewHolderOnClickTransfer mViewHolderOnClickTransfer = generateViewHolderOnClickTransfer(this, holder);
-                if (getOnItemClickListener() != null) {
-                    contentView.setOnClickListener(mViewHolderOnClickTransfer);
-                }
-                if (getOnItemLongClickListener() != null) {
-                    contentView.setOnLongClickListener(mViewHolderOnClickTransfer);
-                }
-                holder.setViewHolderOnClickTransfer(mViewHolderOnClickTransfer);
+                View contentView = holder.getContentView();
+                ViewHolderOnClickTransfer mOnClickTransfer = generateViewHolderOnClickTransfer(this, holder);
+                if (getOnItemClickListener() != null) contentView.setOnClickListener(mOnClickTransfer);
+                if (getOnItemLongClickListener() != null) contentView.setOnLongClickListener(mOnClickTransfer);
+
+                mCacheTransfer.put(holder, mOnClickTransfer);
             }
         }
-        holder.setUpdataData(this, (D) getDataItem(position));
+        holder.setUpdataData(this, getDataItem(position));
     }
 
     @Override
     public void onViewRecycled(@NonNull BaseViewHolder<D> holder) {
         super.onViewRecycled(holder);
         if (mObjectCacheUtils != null) {
-            mObjectCacheUtils.recycle(holder.getViewHolderOnClickTransfer());
+            mObjectCacheUtils.recycle(mCacheTransfer.remove(holder));
         }
         holder.onRecycled();
     }
@@ -53,6 +55,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
     final ViewHolderOnClickTransfer generateViewHolderOnClickTransfer(BaseRecyclerViewAdapter adapter, BaseViewHolder holder) {
         //<editor-fold desc="对象生成">
         if (mObjectCacheUtils == null) {
+            mCacheTransfer = new HashMap<>();
             mObjectCacheUtils = new ObjectCacheUtils<Object, ViewHolderOnClickTransfer>() {
                 @Override
                 public ViewHolderOnClickTransfer create(Object[] r) {

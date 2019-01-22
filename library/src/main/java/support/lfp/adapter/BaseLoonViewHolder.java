@@ -6,6 +6,7 @@ import android.view.View;
  * <pre>
  * Tip:
  *      BaseRecyclerViewAdapter的BaseViewHolder,懒人版
+ *      将事件代理给BaseLoonRecyclerViewAdapter处理
  *
  * Function:
  *

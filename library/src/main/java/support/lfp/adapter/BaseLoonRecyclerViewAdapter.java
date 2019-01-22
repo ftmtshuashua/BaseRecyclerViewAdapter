@@ -16,9 +16,11 @@ import java.lang.reflect.*;
  *
  *
  * Function:
- *      isSearched()            :判断是否为搜索模式
+ *
  *
  * Created by LiFuPing on 22018/5/9
+ * @param <D> 数据源类型
+ * @param <K> ViewHolder类型
  * </pre>
  */
 public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolder> extends BaseRecyclerViewAdapter<D> implements BaseLoonViewHolder.OnViewHolderUpdata<BaseLoonViewHolder<D>, D> {
