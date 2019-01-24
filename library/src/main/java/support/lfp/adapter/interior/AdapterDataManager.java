@@ -80,9 +80,8 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         return (mFlag & FLAG_DISABLE_ITEM_ANIMATOR) == 0;
     }
 
-
     /*----------- 数据操作 -----------*/
-    //<editor-fold desc="Set() |  Add()  |  Insert()  || Move() || replace()">
+    //<editor-fold desc="设置数据并执行更新动画: nSet() |  Add()  |  Insert()  || Move() || replace()">
 
     /**
      * 使用一条数据替换数据源
@@ -147,9 +146,6 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
             final int start = mNotifyItemOffSet + index;
             final int size = data.size();
             notifyItemRangeInserted(start, size);
-//            final int start_last = start + size;
-//            final int size_last = getItemCount() - start_last;
-//            notifyItemRangeChanged(start_last, size_last);
         }
         onOperationDataOrigin();
     }
@@ -176,9 +172,6 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
             final int start = mNotifyItemOffSet + index;
             final int size = count;
             notifyItemRangeRemoved(start, size);
-//            final int start_last = start;
-//            final int size_last = getItemCount() - start_last;
-//            notifyItemRangeChanged(start_last, size_last);
         }
         List<D> removes = new ArrayList<>();
         for (int i = index + count - 1; i >= index; i--) {
@@ -232,6 +225,131 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
     }
     //</editor-fold>
 
+    //<editor-fold desc="只设置数据,需要手动的刷新: SetOnly() |  AddOnly()  |  InsertOnly()  || MoveOnly() || replaceOnly()">
+
+    /**
+     * 使用一条数据替换数据源
+     *
+     * @param data 替换数据
+     */
+    public void setOnly(D data) {
+        setOnly(Arrays.asList(data));
+    }
+
+    /**
+     * 使用一组集合数据替换数据源
+     *
+     * @param data 添加数据
+     * @param <T>  数据集合中数据类型是一个<D>类型
+     */
+    public <T extends D> void setOnly(List<T> data) {
+        if (getDataCount() > 0) removeAllOnly();
+        addOnly(data);
+    }
+
+    /**
+     * 在数据源的末尾添加一条数据
+     *
+     * @param data 添加的数据
+     */
+    public void addOnly(D data) {
+        addOnly(Arrays.asList(data));
+    }
+
+    /**
+     * 在数据源的末尾添加一组数据
+     *
+     * @param data 添加数据
+     * @param <T>  数据集合中数据类型是一个<D>类型
+     */
+    public <T extends D> void addOnly(List<T> data) {
+        insertOnly(getDataCount(), data);
+    }
+
+    /**
+     * 在Index位置插入一条数据
+     *
+     * @param index 数据插入位置
+     * @param data  插入的数据
+     */
+    public void insertOnly(int index, D data) {
+        insertOnly(index, Arrays.asList(data));
+    }
+
+    /**
+     * 在Index位置插入一组数据
+     *
+     * @param index 数据插入位置
+     * @param data  插入的数据集合
+     * @param <T>   数据集合中数据类型是一个<D>类型
+     */
+    public <T extends D> void insertOnly(int index, List<T> data) {
+        if (data == null) return;
+        getData().addAll(index, data);
+        onOperationDataOrigin();
+    }
+
+    /**
+     * 移除Index位置的数据
+     *
+     * @param index 被移除数据的位置
+     * @return 被移除的数据
+     */
+    public D removeOnly(int index) {
+        return removeOnly(index, 1).get(0);
+    }
+
+    /**
+     * 移除从index开始的count条数据
+     *
+     * @param index 被移除数据的起点位置
+     * @param count 被移除数据条数
+     * @return 被移除的数据
+     */
+    public List<D> removeOnly(int index, int count) {
+        List<D> removes = new ArrayList<>();
+        for (int i = index + count - 1; i >= index; i--) {
+            removes.add(getData().remove(i));
+        }
+        onOperationDataOrigin();
+        return removes;
+    }
+
+    /**
+     * 移除所有数据
+     */
+    public void removeAllOnly() {
+        getData().clear();
+        onOperationDataOrigin();
+    }
+
+    /**
+     * 移动数据位置
+     *
+     * @param fromIndex 被移动数据的位置
+     * @param toIndex   希望移动到哪里
+     */
+    public void moveOnly(int fromIndex, int toIndex) {
+        D form = getData().remove(fromIndex);
+        getData().add(toIndex, form);
+        onOperationDataOrigin();
+    }
+
+    /**
+     * 替换数据
+     *
+     * @param index 被替换数据位置
+     * @param data  替换的数据
+     * @return 被替换的数据
+     */
+    public D replaceOnly(int index, D data) {
+        final D remove = getData().remove(index);
+        getData().add(index, data);
+        onOperationDataOrigin();
+        return remove;
+    }
+
+    //</editor-fold>
     @Override
     public long getItemId(int position) {
         return super.getItemId(position);
