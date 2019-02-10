@@ -95,10 +95,12 @@ implementation 'androidx.recyclerview:recyclerview:version'
 implementation 'androidx.appcompat:appcompat:version'
 ```
 
-使用了SimpleRecyclerViewAdapter需要添加混淆配置
+## 混淆配置
 
 ```
--keep class support.lfp.adapter.BaseRecyclerViewAdapter$BaseViewHolder {* ;}
+-keepclassmembers class * extends support.lfp.adapter.BaseViewHolder{
+    public <init>(android.view.View);
+}
 ```
 
 ## LICENSE
