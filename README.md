@@ -17,22 +17,28 @@
 
 >move()
 
+>replace()
+
+>**Only() Only方法只改变数据源，需要手动刷新UI
+
 ## 数据变化监听
-为Adapter设置OnAdapterDataChangeListener，可以观察Adapter中数据的变化.
-也可以在Adapter或者ViewHolder中调用notifyDataChange来显示的通知数据变化
+为Adapter设置OnAdapterDataChangeListener，可以观察Adapter中数据源的变化.
+也可以在Adapter或者ViewHolder中调用notifyDataChange来显示的通知数据变化.
 
 ## Item点击和长按监听
-要使用该功能请保证BaseRecyclerViewConfig.IsEnableItemViewPackage == true,当然它默认就true。
-只需要消耗一点点性能，就能让RecyclerView拥有和ListView一样的Item点击事件监听功能。
->点击事件监听:Adapter.setOnItemClickListener
+完全实现类似与ListView中的Item点击事件，不需要ViewHolder做任何多余的操作
+要使用该功能请保证BaseRecyclerViewConfig.IsEnableItemViewPackage == true,它默认就true
+>点击事件监听:Adapter.setOnItemClickListener()
 
->长按事件监听:Adapter.setOnItemLongClickListener
+>长按事件监听:Adapter.setOnItemLongClickListener()
 
 
 
 ## ViewHolder消息
-通过给Adapter设置addViewHolderMessageHandler来获取来自ViewHolder的消息.
-在ViewHolder中通过sendMessage方法发送消息
+当ViewHolder中执行某些动作希望，Activity或Fragment感知。
+在ViewHolder中调用sendMessage()发送消息广播
+
+>ViewHolder消息监听：Adapter.addViewHolderMessageHandler()
 
 
 ## 懒人版 BaseLoonRecyclerViewAdapter于SimpleRecyclerViewAdapter
