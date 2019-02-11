@@ -1,11 +1,13 @@
 # BaseRecyclerViewAdapter
->BaseRecyclerViewAdapter内部维护多个数据集合，当数据发生变化的时候会自动更行Adapter。
+>BaseRecyclerViewAdapter内部维护多个数据集合，当数据发生变化的时候会自动更新Adapter。
 
->Adapter数据变化监听器OnAdapterDataChangeListener
+>Item点击长按事件监听
+
+>Adapter数据变化监听
 
 >ViewHolder消息
 
->已适配AndroidX
+>AndroidX
 
 ## BaseRecyclerViewAdapter
 内部维护多个数据集合，它会根据数据的变化自动更新UI
@@ -92,7 +94,6 @@ dependencies {
 该项目在AndroidX基础上搭建,需要以下库
 ```
 implementation 'androidx.recyclerview:recyclerview:version'
-implementation 'androidx.appcompat:appcompat:version'
 ```
 
 ## 混淆配置
