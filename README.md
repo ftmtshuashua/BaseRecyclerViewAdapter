@@ -40,12 +40,12 @@
 
 ## ViewHolder消息
 当ViewHolder中执行某些动作希望Activity或Fragment感知。
-在ViewHolder中调用sendMessage()发送消息广播
+在ViewHolder中调用sendMessage()发送消息广播,为Adapter添加消息处理器用来处理消息.
 
 >Adapter.addViewHolderMessageHandler()
 
 
-## 懒人版 BaseLoonRecyclerViewAdapter于SimpleRecyclerViewAdapter
+## 懒人版 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
 BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
 ```
     private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
