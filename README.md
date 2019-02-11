@@ -91,7 +91,7 @@ dependencies {
     implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:version'
 }
 ```
-该项目在AndroidX基础上搭建,需要以下库
+需要库
 ```
 implementation 'androidx.recyclerview:recyclerview:version'
 ```
