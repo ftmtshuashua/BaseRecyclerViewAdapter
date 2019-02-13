@@ -81,7 +81,7 @@ allprojects {
     }
 }
 ```
-在Model的build.gradle中添加 [[图片上传失败...(image-e68183-1550024844218)]](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
+在Model的build.gradle中添加 [![](https://jitpack.io/v/ftmtshuashua/BaseRecyclerViewAdapter.svg)](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
 ```
 dependencies {
     implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:version'
