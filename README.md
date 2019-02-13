@@ -7,6 +7,8 @@
 
 >ViewHolder消息
 
+>懒人模式
+
 >AndroidX
 
 ## BaseRecyclerViewAdapter
@@ -45,7 +47,7 @@
 >Adapter.addViewHolderMessageHandler()
 
 
-## 懒人版 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
+## 懒人模式 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
 BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
 ```
     private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
