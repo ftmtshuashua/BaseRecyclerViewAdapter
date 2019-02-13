@@ -27,6 +27,10 @@ public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolde
 
     final int mLayoutId; //布局ID
 
+    /**
+     *
+     * @param layout  ViewHolder 加载的布局
+     */
     public BaseLoonRecyclerViewAdapter(@LayoutRes int layout) {
         mLayoutId = layout;
     }

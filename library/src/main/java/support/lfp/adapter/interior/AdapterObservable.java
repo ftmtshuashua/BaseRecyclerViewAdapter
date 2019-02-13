@@ -66,7 +66,7 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
      *
      * @param handler ViewHolderMessageHandler
      */
-    public void addViewHolderMessageHandler(ViewHolderMessageHandler handler) {
+    public void addViewHolderMessageHandler(ViewHolderMessageHandler<? super D> handler) {
         mViewHolderMessageHandler.add(handler);
     }
 

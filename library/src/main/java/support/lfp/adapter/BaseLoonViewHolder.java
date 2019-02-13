@@ -34,7 +34,12 @@ public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
 
 
     public interface OnViewHolderUpdata<K extends BaseLoonViewHolder, T> {
-        void convert(K holper, T data);
+        /**
+         *
+         * @param holder 加载数据的ViewHolder
+         * @param data  绑定的数据
+         */
+        void convert(K holder, T data);
     }
 
 }

@@ -77,7 +77,7 @@ public abstract class ViewHolderDataManager<D> extends RecyclerView.ViewHolder {
      * @param obj  消息中携带数据
      */
     protected final void sendMessage(final int what, final Object obj) {
-        getAdapter().sendMessage(what, obj, getLayoutPosition());
+        getAdapter().sendMessage(what, obj, getAdapterPosition());
     }
 
     /**
