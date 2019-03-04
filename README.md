@@ -1,4 +1,3 @@
-# BaseRecyclerViewAdapter
 BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维护一个数据集合，当数据发生变化的时候自动反映到UI上。
 
 >ItemView点击长按事件监听
