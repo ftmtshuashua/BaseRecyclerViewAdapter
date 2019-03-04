@@ -5,6 +5,7 @@ import support.lfp.adapter.BaseViewHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by LiFuPing on 2018/12/10 09:58
  * </pre>
  */
-public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseViewHolder<D>>  implements IDataOrigin<D>{
+public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseViewHolder<D>> implements IDataOrigin<D> {
     /**
      * 禁用所有Item数据动画
      */
@@ -36,6 +37,30 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      *
      */
     private int mNotifyItemOffSet = 0;
+
+
+    /*数据储存，方便在ViewHolder中获取*/
+    private HashMap<String, Object> mTags;
+
+    /*数据储存，方便在ViewHolder中获取*/
+    private Object mTag;
+
+    public void setTag(Object o) {
+        mTag = o;
+    }
+
+    public Object getTag() {
+        return mTag;
+    }
+
+    public void putTag(String key, Object o) {
+        if (mTags == null) mTags = new HashMap<>(1);
+        mTags.put(key, o);
+    }
+
+    public Object getTag(String key) {
+        return mTags == null ? null : mTags.get(key);
+    }
 
 
     /**

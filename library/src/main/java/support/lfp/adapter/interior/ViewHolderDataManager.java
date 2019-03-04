@@ -101,5 +101,4 @@ public abstract class ViewHolderDataManager<D> extends RecyclerView.ViewHolder {
         return getAdapter().getData().indexOf(getSaveData());
     }
 
-
 }
