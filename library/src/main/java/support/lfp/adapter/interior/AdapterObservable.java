@@ -66,7 +66,7 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
      *
      * @param handler ViewHolderMessageHandler
      */
-    public void addViewHolderMessageHandler(ViewHolderMessageHandler<? super D> handler) {
+    public void addViewHolderMessageHandler(ViewHolderMessageHandler  handler) {
         mViewHolderMessageHandler.add(handler);
     }
 
@@ -122,7 +122,7 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
     /**
      * ViewHolder消息观察者，用于接收来自ViewHolder通过sendMessage()方法发出的消息
      */
-    public interface ViewHolderMessageHandler<E> {
+    public interface ViewHolderMessageHandler  {
 
         /**
          * 接收到一条来自ViewHolder的消息
@@ -131,7 +131,7 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
          * @param obj         消息中携带数据
          * @param layoutIndex 该ViewHolder在Adapter中的位置
          */
-        void handlerAdapterMessage(int what, E obj, int layoutIndex);
+        void handlerAdapterMessage(int what, Object obj, int layoutIndex);
 
     }
 
