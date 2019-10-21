@@ -3,10 +3,15 @@ package support.lfp.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 
 /**
@@ -28,8 +33,7 @@ public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolde
     final int mLayoutId; //布局ID
 
     /**
-     *
-     * @param layout  ViewHolder 加载的布局
+     * @param layout ViewHolder 加载的布局
      */
     public BaseLoonRecyclerViewAdapter(@LayoutRes int layout) {
         mLayoutId = layout;
@@ -38,9 +42,19 @@ public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolde
     @NonNull
     @Override
     public BaseLoonViewHolder<D> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        BaseLoonViewHolder<D> viewholder = generateBaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false));
+        BaseLoonViewHolder<D> viewholder = generateBaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutId(viewType), parent, false));
         viewholder.setOnViewHolderUpdata(this);
         return viewholder;
+    }
+
+    /**
+     * 通过ViewType类型获得布局文件ID
+     *
+     * @param viewType
+     * @return
+     */
+    protected int getLayoutId(int viewType) {
+        return mLayoutId;
     }
 
 
