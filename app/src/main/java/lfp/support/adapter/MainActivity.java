@@ -1,16 +1,15 @@
 package lfp.support.adapter;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import support.lfp.adapter.BaseLoonRecyclerViewAdapter;
 import support.lfp.adapter.BaseLoonViewHolder;
 import support.lfp.adapter.BaseRecyclerViewAdapter;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RecyclerView recyclerView = findViewById(R.id.view_RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setItemAnimator(new SlideInLeftAnimator());
+//        recyclerView.setItemAnimator(new SlideInLeftAnimator());
 //        mAdapter.disableItemAnimation(); //禁用动画效果
 
 

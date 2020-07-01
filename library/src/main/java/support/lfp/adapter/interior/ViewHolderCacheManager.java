@@ -3,14 +3,14 @@ package support.lfp.adapter.interior;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.*;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
-import androidx.annotation.StringRes;
 
 /**
  * <pre>

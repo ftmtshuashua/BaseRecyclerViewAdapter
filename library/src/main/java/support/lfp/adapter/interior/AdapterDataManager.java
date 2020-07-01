@@ -1,12 +1,13 @@
 package support.lfp.adapter.interior;
 
-import androidx.recyclerview.widget.RecyclerView;
-import support.lfp.adapter.BaseViewHolder;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import support.lfp.adapter.BaseViewHolder;
 
 /**
  * <pre>

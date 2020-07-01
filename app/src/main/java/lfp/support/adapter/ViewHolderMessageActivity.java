@@ -2,8 +2,8 @@ package lfp.support.adapter;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
+
 import support.lfp.adapter.BaseLoonRecyclerViewAdapter;
 import support.lfp.adapter.BaseLoonViewHolder;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class ViewHolderMessageActivity extends Activity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -41,7 +41,7 @@ public class ViewHolderMessageActivity extends Activity {
         mAdapter.addViewHolderMessageHandler((what, obj, layoutIndex) -> {
             /*ViewHolder消息处理器*/
             if (what == 666) {
-                Model data = obj;
+                Model data = (Model)obj;
             }
         });
 

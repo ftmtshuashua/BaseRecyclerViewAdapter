@@ -1,8 +1,8 @@
 package support.lfp.adapter;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
 import support.lfp.adapter.interior.AdapterObservable;
 
 import java.util.HashMap;
