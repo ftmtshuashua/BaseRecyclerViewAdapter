@@ -88,7 +88,7 @@ dependencies {
 ```
 需要库
 ```
-implementation 'androidx.recyclerview:recyclerview:version'
+implementation 'com.android.support:recyclerview-v7:version'
 ```
 
 ## 混淆配置
