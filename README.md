@@ -8,6 +8,7 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 
 >懒人模式
 
+>[支持AndroidX](https://github.com/ftmtshuashua/BaseRecyclerViewAdapter_AndroidX)
 
 
 ## BaseRecyclerViewAdapter
