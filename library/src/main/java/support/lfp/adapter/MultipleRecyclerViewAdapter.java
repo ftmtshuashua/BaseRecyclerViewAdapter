@@ -13,8 +13,8 @@ import support.lfp.adapter.interior.AdapterObservable;
  * @param <T>
  */
 public class MultipleRecyclerViewAdapter<T extends MultipleViewModel> extends BaseLoonRecyclerViewAdapter<T, BaseLoonViewHolder<T>> {
-    public MultipleRecyclerViewAdapter(int layout) {
-        super(layout);
+    public MultipleRecyclerViewAdapter() {
+        super(0);
 
         setOnItemClickListener(new OnItemClickListener<T>() {
             @Override
