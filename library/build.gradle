@@ -29,8 +29,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-//    compileOnly 'com.android.support:support-annotations:28.0.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.2.1'
 
 }
 
