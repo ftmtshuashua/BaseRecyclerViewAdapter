@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.ftmtshuashua'
 
 android {
     compileSdkVersion 28
@@ -29,11 +30,10 @@ android {
 
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    compileOnly 'com.android.support:support-annotations:28.0.0'
+//    compileOnly 'com.android.support:support-annotations:28.0.0'
 
 }
 
-group = 'com.github.ftmtshuashua'
 // 指定编码
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
