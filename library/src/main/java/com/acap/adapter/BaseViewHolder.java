@@ -1,9 +1,10 @@
-package support.lfp.adapter;
+package com.acap.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
-import support.lfp.adapter.interior.ViewHolderCacheManager;
-import support.lfp.adapter.widget.SideslipView;
+import android.widget.FrameLayout;
+
+import com.acap.adapter.interior.ViewHolderCacheManager;
 
 /**
  * <pre>
@@ -30,7 +31,7 @@ public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {
     /*在ItemView的外面包裹一层，便于点击事件设置监听*/
     private static final View packageItemView(View itemView) {
         if (itemView != null && BaseRecyclerViewConfig.IsEnableItemViewPackage) {
-            ViewGroup rootview = new SideslipView(itemView.getContext());
+            ViewGroup rootview = new FrameLayout(itemView.getContext());
             final ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
             rootview.setLayoutParams(new ViewGroup.LayoutParams(layoutParams.width, layoutParams.height));
             rootview.setId(ITEMVIEW_PACKAGE_VIEW_ID);

@@ -1,11 +1,7 @@
-package support.lfp.adapter;
-
-import android.view.View;
+package com.acap.adapter;
 
 import java.util.HashMap;
 import java.util.List;
-
-import support.lfp.adapter.interior.AdapterObservable;
 
 /**
  * 复杂布局Adapter
@@ -15,13 +11,7 @@ import support.lfp.adapter.interior.AdapterObservable;
 public class MultipleRecyclerViewAdapter<T extends MultipleViewModel> extends BaseLoonRecyclerViewAdapter<T, BaseLoonViewHolder<T>> {
     public MultipleRecyclerViewAdapter() {
         super(0);
-
-        setOnItemClickListener(new OnItemClickListener<T>() {
-            @Override
-            public void onItemClick(AdapterObservable<T> adapter, BaseViewHolder<T> viewHolder, View view, int position) {
-                viewHolder.getSaveData().onClick(viewHolder.getContext());
-            }
-        });
+        setOnItemClickListener((adapter, viewHolder, view, position) -> viewHolder.getSaveData().onClick(viewHolder.getContext()));
     }
 
     /*储存Layout与ViewType对应关系*/

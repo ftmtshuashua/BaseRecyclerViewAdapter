@@ -2,10 +2,10 @@ package lfp.support.adapter;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
-import support.lfp.adapter.BaseLoonRecyclerViewAdapter;
-import support.lfp.adapter.BaseLoonViewHolder;
+import com.acap.adapter.BaseLoonRecyclerViewAdapter;
+import com.acap.adapter.BaseLoonViewHolder;
 
 import java.util.List;
 

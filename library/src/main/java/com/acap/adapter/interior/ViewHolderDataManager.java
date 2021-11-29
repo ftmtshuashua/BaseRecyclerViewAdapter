@@ -1,11 +1,11 @@
-package support.lfp.adapter.interior;
+package com.acap.adapter.interior;
 
 import android.content.Context;
 import android.view.View;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
-import support.lfp.adapter.BaseRecyclerViewAdapter;
+import com.acap.adapter.BaseRecyclerViewAdapter;
 
 /**
  * <pre>

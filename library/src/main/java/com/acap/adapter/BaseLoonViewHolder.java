@@ -1,4 +1,4 @@
-package support.lfp.adapter;
+package com.acap.adapter;
 
 import android.view.View;
 

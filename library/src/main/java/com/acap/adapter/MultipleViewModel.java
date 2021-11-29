@@ -1,9 +1,9 @@
-package support.lfp.adapter;
+package com.acap.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 
-import support.lfp.adapter.BaseViewHolder;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 /**
  * 复炸布局的ViewModel
@@ -43,6 +43,8 @@ public abstract class MultipleViewModel {
 
     /**
      * 当Model对应的UI被点击的时候，响应点击事件到Model中
+     *
+     * 当Adapter的setOnItemClickListener方法被调用时候，这个方法将不再回调
      */
     public void onClick(Context context) {
 

@@ -1,4 +1,4 @@
-package support.lfp.adapter.interior;
+package com.acap.adapter.interior;
 
 import java.util.List;
 

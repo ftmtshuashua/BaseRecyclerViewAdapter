@@ -1,7 +1,7 @@
-package support.lfp.adapter.interior;
+package com.acap.adapter.interior;
 
 import android.view.View;
-import support.lfp.adapter.BaseViewHolder;
+import com.acap.adapter.BaseViewHolder;
 
 import java.util.ArrayList;
 

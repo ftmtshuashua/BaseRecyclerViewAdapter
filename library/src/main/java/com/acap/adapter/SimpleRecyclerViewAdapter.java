@@ -1,9 +1,10 @@
-package support.lfp.adapter;
+package com.acap.adapter;
 
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
 

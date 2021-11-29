@@ -1,14 +1,19 @@
+BaseRecyclerViewAdapter
+=====
+[![](https://jitpack.io/v/ftmtshuashua/BaseRecyclerViewAdapter.svg)](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
+
+
 BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维护一个数据集合，当数据发生变化的时候自动反映到UI上。
 
->ItemView点击长按事件监听
+>ItemView点击长按事件监听 ： Adapter.setOnItemClickListener()
 
->Adapter数据变化监听
+>Adapter数据变化监听 ： Adapter.setOnAdapterDataChangeListener()
 
->ViewHolder消息
+>ViewHolder消息 ： Adapter.addViewHolderMessageHandler()
 
->懒人模式
+>懒人模式 ： BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
 
->[支持AndroidX](https://github.com/ftmtshuashua/BaseRecyclerViewAdapter_AndroidX)
+>多布局复用 ：MultipleRecyclerViewAdapter + MultipleViewModel
 
 
 ## BaseRecyclerViewAdapter
@@ -43,6 +48,28 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 1.在Adapter与Viewholder中调用sendMessage()来发送一条消息到Adapter的消息监听器中
 
 
+
+## 配置依赖
+
+在项目的build.gradle中添加
+```
+allprojects {
+    repositories {
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+```
+
+```
+dependencies {
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:1.1.2'
+}
+``` 
+
+
+
+
 ## 懒人模式 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
 BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
 ```
@@ -67,38 +94,6 @@ SimpleRecyclerViewAdapter允许不自定义Adapter。
 //layoutResId  :Viewholder使用的布局
 recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId));
 ```
-
-
-
-## 配置依赖
-
-在项目的build.gradle中添加
-```
-allprojects {
-    repositories {
-        maven { url 'https://www.jitpack.io' }
-    }
-}
-```
-在Model的build.gradle中添加 [![](https://jitpack.io/v/ftmtshuashua/BaseRecyclerViewAdapter.svg)](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
-```
-dependencies {
-    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:version'
-}
-```
-需要库
-```
-implementation 'com.android.support:recyclerview-v7:version'
-```
-
-## 混淆配置
-
-```
--keepclassmembers class * extends support.lfp.adapter.BaseViewHolder{
-    public <init>(android.view.View);
-}
-```
-
 
 ##一个例子
 ```
@@ -157,21 +152,4 @@ public class ViewHolderMessageActivity extends Activity {
 }
 ```
 
-
-## LICENSE
-
-```
-Copyright (c) 2018-present, BaseRecyclerViewAdapter Contributors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+ 
