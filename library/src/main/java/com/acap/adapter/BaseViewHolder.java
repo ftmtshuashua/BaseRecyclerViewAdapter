@@ -13,7 +13,7 @@ import com.acap.adapter.interior.ViewHolderCacheManager;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/10 09:36
+ * Created by A·Cap on 2018/12/10 09:36
  * </pre>
  */
 public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {

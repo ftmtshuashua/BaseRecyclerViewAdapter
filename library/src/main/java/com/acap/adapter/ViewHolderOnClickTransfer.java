@@ -9,7 +9,7 @@ import android.view.View;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/15 17:43
+ * Created by A·Cap on 2018/12/15 17:43
  * </pre>
  */
 public final class ViewHolderOnClickTransfer implements View.OnClickListener, View.OnLongClickListener {

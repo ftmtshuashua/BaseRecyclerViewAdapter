@@ -13,7 +13,7 @@ import com.acap.adapter.BaseRecyclerViewAdapter;
  *      数据源
  * Function:
  *
- * Created by LiFuPing on 2018/12/10 10:14
+ * Created by A·Cap on 2018/12/10 10:14
  * </pre>
  */
 public abstract class ViewHolderDataManager<D> extends RecyclerView.ViewHolder {

@@ -20,7 +20,7 @@ import com.acap.adapter.BaseViewHolder;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/10 09:58
+ * Created by A·Cap on 2018/12/10 09:58
  * </pre>
  */
 public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseViewHolder<D>> implements IDataOrigin<D> {

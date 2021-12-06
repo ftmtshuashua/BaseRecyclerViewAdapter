@@ -9,7 +9,7 @@ import java.util.List;
  *
  * Function:
  *
- * Created by LiFuPing on 2019/2/11 10:01
+ * Created by A·Cap on 2019/2/11 10:01
  * </pre>
  */
 public interface IDataOrigin<D> {

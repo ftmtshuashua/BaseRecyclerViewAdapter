@@ -20,7 +20,7 @@ import androidx.annotation.StringRes;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/10 10:18
+ * Created by A·Cap on 2018/12/10 10:18
  * </pre>
  */
 public abstract class ViewHolderCacheManager<D> extends ViewHolderDataManager<D> {

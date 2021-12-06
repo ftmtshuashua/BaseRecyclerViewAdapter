@@ -15,7 +15,7 @@ import java.util.List;
  *
  * Function:
  *
- * Created by LiFuPing on 2019/2/13 10:31
+ * Created by A·Cap on 2019/2/13 10:31
  * </pre>
  */
 public class ViewHolderMessageActivity extends Activity {

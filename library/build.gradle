@@ -29,8 +29,7 @@ android {
 }
 
 dependencies {
-    compileOnly 'androidx.recyclerview:recyclerview:1.2.1'
-
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 }
 
 // 指定编码

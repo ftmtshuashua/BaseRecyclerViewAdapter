@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/10 09:25
+ * Created by A·Cap on 2018/12/10 09:25
  * </pre>
  */
 public abstract class AdapterObservable<D> extends AdapterDataManager<D> {

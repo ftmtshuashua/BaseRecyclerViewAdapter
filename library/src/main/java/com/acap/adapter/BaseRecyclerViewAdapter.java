@@ -20,7 +20,7 @@ import java.util.Map;
  * Function:
  *      isSearched()            :判断是否为搜索模式
  *
- * Created by LiFuPing on 22018/5/9
+ * Created by A·Cap on 22018/5/9
  * @param <D> 数据源类型
  * </pre>
  */

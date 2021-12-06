@@ -10,7 +10,7 @@ import android.view.View;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/10 09:36
+ * Created by A·Cap on 2018/12/10 09:36
  * </pre>
  */
 
@@ -35,9 +35,8 @@ public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
 
     public interface OnViewHolderUpdata<K extends BaseLoonViewHolder, T> {
         /**
-         *
          * @param holder 加载数据的ViewHolder
-         * @param data  绑定的数据
+         * @param data   绑定的数据
          */
         void convert(K holder, T data);
     }

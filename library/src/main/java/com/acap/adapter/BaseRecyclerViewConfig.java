@@ -7,7 +7,7 @@ package com.acap.adapter;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/15 17:07
+ * Created by A·Cap on 2018/12/15 17:07
  * </pre>
  */
 public final class BaseRecyclerViewConfig {

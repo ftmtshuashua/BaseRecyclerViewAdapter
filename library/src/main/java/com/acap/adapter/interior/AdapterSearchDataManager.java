@@ -11,7 +11,7 @@ import java.util.List;
  *
  * Function:
  *
- * Created by LiFuPing on 2018/12/14 17:33
+ * Created by A·Cap on 2018/12/14 17:33
  * </pre>
  */
 public abstract class AdapterSearchDataManager<D> extends AdapterDataManager<D> {
