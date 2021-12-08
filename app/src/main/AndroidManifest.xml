@@ -21,8 +21,21 @@
         <activity
             android:name=".BasisRecyclerViewActivity"
             android:label="基础功能-增删查改" />
-        <activity android:name=".ClickRecyclerViewActivity"
+        <activity
+            android:name=".ClickRecyclerViewActivity"
             android:label="点击和长按监听" />
+        <activity
+            android:name=".SlideRecyclerViewActivity"
+            android:label="侧滑菜单" />
+        <activity
+            android:name=".ViewHolderMessageRecyclerViewActivity"
+            android:label="ViewHodler消息" />
+        <activity
+            android:name=".OnlyAdapterRecyclerViewActivity"
+            android:label="懒人模式-Adapter" />
+        <activity
+            android:name=".OnlyViewHolderRecyclerViewActivity"
+            android:label="懒人模式-ViewHolder" />
     </application>
 
 </manifest>
