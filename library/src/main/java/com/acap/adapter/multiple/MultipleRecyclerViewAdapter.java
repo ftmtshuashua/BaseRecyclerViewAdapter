@@ -1,4 +1,7 @@
-package com.acap.adapter;
+package com.acap.adapter.multiple;
+
+import com.acap.adapter.loon.BaseLoonRecyclerViewAdapter;
+import com.acap.adapter.loon.BaseLoonViewHolder;
 
 import java.util.HashMap;
 import java.util.List;

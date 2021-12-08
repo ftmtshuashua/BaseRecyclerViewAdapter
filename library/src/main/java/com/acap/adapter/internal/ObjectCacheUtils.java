@@ -1,4 +1,4 @@
-package com.acap.adapter;
+package com.acap.adapter.internal;
 
 import java.util.LinkedList;
 

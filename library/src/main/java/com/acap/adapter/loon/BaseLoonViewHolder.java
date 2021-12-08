@@ -1,6 +1,8 @@
-package com.acap.adapter;
+package com.acap.adapter.loon;
 
 import android.view.View;
+
+import com.acap.adapter.BaseViewHolder;
 
 /**
  * <pre>
@@ -17,7 +19,7 @@ import android.view.View;
 
 public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
 
-    OnViewHolderUpdata mOnViewHolderUpdata;
+    OnViewHolderUpdate mOnViewHolderUpdate;
 
     public BaseLoonViewHolder(View itemView) {
         super(itemView);
@@ -25,15 +27,15 @@ public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
 
     @Override
     protected void onUpdateUI(D data) {
-        if (mOnViewHolderUpdata != null) mOnViewHolderUpdata.convert(this, data);
+        if (mOnViewHolderUpdate != null) mOnViewHolderUpdate.convert(this, data);
     }
 
-    public void setOnViewHolderUpdata(OnViewHolderUpdata l) {
-        mOnViewHolderUpdata = l;
+    public void setOnViewHolderUpdate(OnViewHolderUpdate l) {
+        mOnViewHolderUpdate = l;
     }
 
 
-    public interface OnViewHolderUpdata<K extends BaseLoonViewHolder, T> {
+    public interface OnViewHolderUpdate<K extends BaseLoonViewHolder, T> {
         /**
          * @param holder 加载数据的ViewHolder
          * @param data   绑定的数据

@@ -2,11 +2,14 @@ package lfp.support.adapter;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.acap.adapter.BaseLoonRecyclerViewAdapter;
-import com.acap.adapter.BaseLoonViewHolder;
+import com.acap.adapter.loon.BaseLoonRecyclerViewAdapter;
+import com.acap.adapter.loon.BaseLoonViewHolder;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -21,7 +24,7 @@ import java.util.List;
 public class ViewHolderMessageActivity extends Activity {
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -33,15 +36,17 @@ public class ViewHolderMessageActivity extends Activity {
         });
         mAdapter.setOnItemClickListener((adapter, viewHolder, view, position) -> {
             /*点击监听*/
+            Log.i("Log", MessageFormat.format("Item click :{0}", position));
         });
         mAdapter.setOnItemLongClickListener((adapter, viewHolder, view, position) -> {
+            Log.i("Log", MessageFormat.format("Item long click :{0}", position));
             /*长按监听*/
             return true;
         });
         mAdapter.addViewHolderMessageHandler((what, obj, layoutIndex) -> {
             /*ViewHolder消息处理器*/
             if (what == 666) {
-                Model data = (Model)obj;
+                Model data = (Model) obj;
             }
         });
 

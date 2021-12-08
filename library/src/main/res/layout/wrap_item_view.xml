@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!-- ItemView 的最外层View-->
+<com.acap.adapter.slide.SlideFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/view_SlideFrameLayout"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+</com.acap.adapter.slide.SlideFrameLayout>

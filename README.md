@@ -2,56 +2,54 @@ BaseRecyclerViewAdapter
 =====
 [![](https://jitpack.io/v/ftmtshuashua/BaseRecyclerViewAdapter.svg)](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
 
-
 BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维护一个数据集合，当数据发生变化的时候自动反映到UI上。
 
->ItemView点击长按事件监听 ： Adapter.setOnItemClickListener()
+> ItemView点击长按事件监听 ： Adapter.setOnItemClickListener()
 
->Adapter数据变化监听 ： Adapter.setOnAdapterDataChangeListener()
+> Adapter数据变化监听 ： Adapter.setOnAdapterDataChangeListener()
 
->ViewHolder消息 ： Adapter.addViewHolderMessageHandler()
+> ViewHolder消息 ： Adapter.addViewHolderMessageHandler()
 
->懒人模式 ： BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
+> 懒人模式 ： BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
 
->多布局复用 ：MultipleRecyclerViewAdapter + MultipleViewModel
-
+> 多种样式 ：MultipleRecyclerViewAdapter + MultipleViewModel
 
 ## BaseRecyclerViewAdapter
+
 内部维护多个数据集合，它会根据数据的变化自动更新UI
->set()
->add()
->insert()
->move()
->replace()
->**Only() Only方法只改变数据源，需要手动刷新UI
+> set()
+> add()
+> insert()
+> move()
+> replace()
+> **Only() Only方法只改变数据源，需要手动刷新UI
 
 ## ItemView点击和长按监听
+
 不需要ViewHolder做任何适配，完美实现点击事件监听
->Adapter.setOnItemClickListener()
->Adapter.setOnItemLongClickListener()
+> Adapter.setOnItemClickListener()
+> Adapter.setOnItemLongClickListener()
 
 1.在RecyclerView中没有类似ListView的点击长按事件监听，需要我们在ViewHolder中自己处理点击事件，使用起来比较麻烦。而且直接给ViewHolder的itemView设置点击事件会出现一些问题。
-2.我的处理方法是在itemView创建的时候给他设置点击监听器，然后在它外面包裹一层FragmentLayout用来当作真正的itemView，原来的itemView就变成了它的内容。
-3.不需要对ViewHolder做任何改动完美实现点击事件监听
+2.我的处理方法是在itemView创建的时候给他设置点击监听器，然后在它外面包裹一层FragmentLayout用来当作真正的itemView，原来的itemView就变成了它的内容。 3.不需要对ViewHolder做任何改动完美实现点击事件监听
 
 ## 数据变化监听
-对Adapter中数据变化做出响应
->Adapter.setOnAdapterDataChangeListener()
 
-1.显示调用改变数据的方法 Set() |  Add()  |  Insert()  || Move() || replace() 会自动回调该方法
-2.其他情况通过手动调用Adapter或Viewholder中的 notifyDataChange() 方法来通知数据变化
+对Adapter中数据变化做出响应
+> Adapter.setOnAdapterDataChangeListener()
+
+1.显示调用改变数据的方法 Set() | Add()  | Insert()  || Move() || replace() 会自动回调该方法 2.其他情况通过手动调用Adapter或Viewholder中的 notifyDataChange() 方法来通知数据变化
 
 ## ViewHolder消息
 
->Adapter.addViewHolderMessageHandler()
+> Adapter.addViewHolderMessageHandler()
 
 1.在Adapter与Viewholder中调用sendMessage()来发送一条消息到Adapter的消息监听器中
-
-
 
 ## 配置依赖
 
 在项目的build.gradle中添加
+
 ```
 allprojects {
     repositories {
@@ -67,11 +65,10 @@ dependencies {
 }
 ``` 
 
-
-
-
 ## 懒人模式 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
+
 BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
+
 ```
     private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
         public MyAdapter() {
@@ -87,15 +84,16 @@ BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
     }
 ```
 
-SimpleRecyclerViewAdapter允许不自定义Adapter。
-使用方式:
+SimpleRecyclerViewAdapter允许不自定义Adapter。 使用方式:
+
 ```
 //Class<? extends BaseViewHolder<D>>   :设置被Adapter加载的ViewHolder
 //layoutResId  :Viewholder使用的布局
 recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId));
 ```
 
-##一个例子
+## 一个例子
+
 ```
 public class ViewHolderMessageActivity extends Activity {
 

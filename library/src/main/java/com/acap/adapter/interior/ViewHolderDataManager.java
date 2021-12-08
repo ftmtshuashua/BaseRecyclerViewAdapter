@@ -3,6 +3,7 @@ package com.acap.adapter.interior;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.acap.adapter.BaseRecyclerViewAdapter;
@@ -59,7 +60,7 @@ public abstract class ViewHolderDataManager<D> extends RecyclerView.ViewHolder {
      * @param adapter 加载ViewHolder的Adapter
      * @param data    数据源
      */
-    public final void setUpdataData(RecyclerView.Adapter adapter, D data) {
+    public final void setUpdateData(@NonNull RecyclerView.Adapter adapter, D data) {
         this.mAdapter = adapter;
         this.mSaveData = data;
         onUpdateUI(data);

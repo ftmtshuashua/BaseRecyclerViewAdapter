@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.acap.adapter.BaseLoonRecyclerViewAdapter;
-import com.acap.adapter.BaseLoonViewHolder;
 import com.acap.adapter.BaseRecyclerViewAdapter;
 import com.acap.adapter.BaseViewHolder;
 import com.acap.adapter.interior.AdapterObservable;
+import com.acap.adapter.loon.BaseLoonRecyclerViewAdapter;
+import com.acap.adapter.loon.BaseLoonViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 //        recyclerView.setItemAnimator(new SlideInLeftAnimator());
 //        mAdapter.disableItemAnimation(); //禁用动画效果
-
 
 //        recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId)); //懒人方式加载
         recyclerView.setAdapter(mAdapter = new MyAdapter());
@@ -132,18 +131,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    AdapterObservable.OnItemClickListener mOnItemClick = new AdapterObservable.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterObservable adapter, BaseViewHolder viewHolder, View view, int position) {
-            Toast("点击 ：" + position);
-        }
+    AdapterObservable.OnItemClickListener mOnItemClick = (adapter, viewHolder, view, position) -> {
+        Toast("点击 ：" + position);
+
     };
-    AdapterObservable.OnItemLongClickListener mOnItemLongClick = new AdapterObservable.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterObservable adapter, BaseViewHolder viewHolder, View view, int position) {
-            Toast("长按 ：" + position);
-            return true;
-        }
+    AdapterObservable.OnItemLongClickListener mOnItemLongClick = (adapter, viewHolder, view, position) -> {
+        Toast("长按 ：" + position);
+        return true;
     };
 
     //懒人版Adapter

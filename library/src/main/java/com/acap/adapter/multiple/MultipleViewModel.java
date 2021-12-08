@@ -1,8 +1,11 @@
-package com.acap.adapter;
+package com.acap.adapter.multiple;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.acap.adapter.BaseViewHolder;
 
 
 /**
@@ -15,9 +18,10 @@ public abstract class MultipleViewModel {
         mAdapter = adapter;
     }
 
-    public RecyclerView.Adapter getAdapter(){
+    public RecyclerView.Adapter getAdapter() {
         return mAdapter;
     }
+
     /**
      * 给定Model在View中的的布局文件
      */
@@ -39,14 +43,14 @@ public abstract class MultipleViewModel {
      *
      * @param holder
      */
-    public abstract void onUpdate(BaseViewHolder holder);
+    public abstract void onUpdate(@NonNull BaseViewHolder holder);
 
     /**
      * 当Model对应的UI被点击的时候，响应点击事件到Model中
-     *
+     * <p>
      * 当Adapter的setOnItemClickListener方法被调用时候，这个方法将不再回调
      */
-    public void onClick(Context context) {
+    public void onClick(@NonNull Context context) {
 
     }
 

@@ -1,10 +1,11 @@
 package com.acap.adapter;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.acap.adapter.interior.ViewHolderCacheManager;
+import com.cap.adapter.R;
 
 /**
  * <pre>
@@ -18,27 +19,28 @@ import com.acap.adapter.interior.ViewHolderCacheManager;
  */
 public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {
 
-    public static final int ITEMVIEW_PACKAGE_VIEW_ID = 0xA78B0E23;
     private View mV_ContentView;
 
     public BaseViewHolder(View itemView) {
-        super(packageItemView(itemView));
-        mV_ContentView = itemView.findViewById(ITEMVIEW_PACKAGE_VIEW_ID);
-        if (mV_ContentView == null) mV_ContentView = itemView;
-
+        super(wrapItemView(itemView));
+        View viewById = itemView.findViewById(R.id.view_SlideFrameLayout);
+        if (viewById == null) {
+            mV_ContentView = itemView;
+        } else {
+            mV_ContentView = viewById;
+        }
     }
 
     /*在ItemView的外面包裹一层，便于点击事件设置监听*/
-    private static final View packageItemView(View itemView) {
-        if (itemView != null && BaseRecyclerViewConfig.IsEnableItemViewPackage) {
-            ViewGroup rootview = new FrameLayout(itemView.getContext());
+    private static final View wrapItemView(View itemView) {
+        if (itemView != null) {
+            ViewGroup inflate = (ViewGroup) LayoutInflater.from(itemView.getContext()).inflate(R.layout.wrap_item_view, null, false);
             final ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
-            rootview.setLayoutParams(new ViewGroup.LayoutParams(layoutParams.width, layoutParams.height));
-            rootview.setId(ITEMVIEW_PACKAGE_VIEW_ID);
-            rootview.addView(itemView);
-            return rootview;
+            inflate.setLayoutParams(new ViewGroup.LayoutParams(layoutParams.width, layoutParams.height));
+            inflate.addView(itemView);
+            return inflate;
         }
-        return itemView;
+        return null;
     }
 
     /**

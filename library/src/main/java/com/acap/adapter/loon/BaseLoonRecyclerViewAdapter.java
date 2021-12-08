@@ -1,4 +1,4 @@
-package com.acap.adapter;
+package com.acap.adapter.loon;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+
+import com.acap.adapter.BaseRecyclerViewAdapter;
+import com.acap.adapter.BaseViewHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +32,7 @@ import java.lang.reflect.Type;
  * @param <K> ViewHolder类型
  * </pre>
  */
-public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolder> extends BaseRecyclerViewAdapter<D> implements BaseLoonViewHolder.OnViewHolderUpdata<BaseLoonViewHolder<D>, D> {
+public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolder> extends BaseRecyclerViewAdapter<D> implements BaseLoonViewHolder.OnViewHolderUpdate<BaseLoonViewHolder<D>, D> {
 
     final int mLayoutId; //布局ID
 
@@ -44,7 +47,7 @@ public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolde
     @Override
     public BaseLoonViewHolder<D> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         BaseLoonViewHolder<D> viewholder = generateBaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutId(viewType), parent, false));
-        viewholder.setOnViewHolderUpdata(this);
+        viewholder.setOnViewHolderUpdate(this);
         return viewholder;
     }
 
