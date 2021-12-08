@@ -6,6 +6,5 @@ build/
 local.properties
 androidTest/
 test/
-gradle
 app/build/
 library/build/
