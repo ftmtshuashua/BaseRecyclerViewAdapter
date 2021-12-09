@@ -45,12 +45,14 @@ public class SlideControl extends RecyclerView.OnScrollListener implements ViewH
         }
     }
 
-    public void bindSlideFrameLayout(SlideFrameLayout itemView, ViewHolderOnClickTransfer mOnClick) {
+    public void bindSlideFrameLayout(int position, SlideFrameLayout itemView, ViewHolderOnClickTransfer mOnClick) {
         mOnScrollingListener.add(itemView);
         mSlideFrameLayout.add(itemView);
         itemView.setOnMenuStateChangeListener(mOnMenuState);
 
-        mOnClick.setOnClickTriggerListener(this);
+        if (mOnClick != null) {
+            mOnClick.setOnClickTriggerListener(this);
+        }
     }
 
     public void unbindSlideFrameLayout(SlideFrameLayout itemView) {
@@ -63,7 +65,6 @@ public class SlideControl extends RecyclerView.OnScrollListener implements ViewH
     public void onTrigger(int type, View view) {
         mOnMenuState.onMenuStateChange(null, true);
     }
-
 
     /**
      * 当开始滚动时候

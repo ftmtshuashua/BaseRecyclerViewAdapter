@@ -1,14 +1,15 @@
 package lfp.support.adapter
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.acap.adapter.BaseViewHolder
+import com.acap.adapter.SimpleRecyclerViewAdapter
 import com.acap.adapter.loon.BaseLoonRecyclerViewAdapter
 import com.acap.adapter.loon.BaseLoonViewHolder
-import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
-import lfp.support.adapter.item.TextViewModel
 
 
 /**
@@ -58,7 +59,7 @@ class OnlyAdapterRecyclerViewActivity : AppCompatActivity() {
  * </pre>
  */
 class OnlyViewHolderRecyclerViewActivity : AppCompatActivity() {
-    private val mAdapter by lazy { MultipleRecyclerViewAdapter<TextViewModel>() }
+    private val mAdapter by lazy { SimpleRecyclerViewAdapter(MyViewHolder::class.java, R.layout.layout_textview) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,13 +70,20 @@ class OnlyViewHolderRecyclerViewActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = mAdapter
 
-        mAdapter.add(TextViewModel("0"))
-        mAdapter.add(TextViewModel("1"))
-        mAdapter.add(TextViewModel("2"))
-        mAdapter.add(TextViewModel("3"))
-        mAdapter.add(TextViewModel("4"))
-        mAdapter.add(TextViewModel("5"))
+        mAdapter.add("0")
+        mAdapter.add("1")
+        mAdapter.add("2")
+        mAdapter.add("3")
+        mAdapter.add("4")
+        mAdapter.add("5")
 
+    }
+
+
+    class MyViewHolder(itemView: View) : BaseViewHolder<String>(itemView) {
+        override fun onUpdateUI(data: String?) {
+            setText(R.id.view_Info, data)
+        }
     }
 
 }

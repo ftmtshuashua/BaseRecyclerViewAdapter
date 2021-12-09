@@ -70,7 +70,7 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
 
         // 侧滑菜单自动收回
         if (itemView instanceof SlideFrameLayout) {
-            mSlideControl.bindSlideFrameLayout((SlideFrameLayout) itemView, mOnClick);
+            mSlideControl.bindSlideFrameLayout(position , (SlideFrameLayout) itemView, mOnClick);
         }
 
         holder.setUpdateData(this, getDataItem(position));
@@ -89,8 +89,6 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
 
         holder.onRecycled();
     }
-
-
 
 
 }

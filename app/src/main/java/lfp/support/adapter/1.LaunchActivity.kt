@@ -35,7 +35,7 @@ class LaunchActivity : AppCompatActivity() {
         mAdapter.add(ButtonViewModel("基础功能-点击和长按监听") { startActivity(Intent(this, ClickRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("基础功能-ViewHolder消息") { startActivity(Intent(this, ViewHolderMessageRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("懒人模式-只要Adapter") { startActivity(Intent(this, OnlyAdapterRecyclerViewActivity::class.java)) })
-//        mAdapter.add(ButtonViewModel("懒人模式-只要ViewHolder") { startActivity(Intent(this, ViewHolderMessageRecyclerViewActivity::class.java)) })
+        mAdapter.add(ButtonViewModel("懒人模式-只要ViewHolder") { startActivity(Intent(this, OnlyViewHolderRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("高级功能-侧滑菜单") { startActivity(Intent(this, SlideRecyclerViewActivity::class.java)) })
 
     }

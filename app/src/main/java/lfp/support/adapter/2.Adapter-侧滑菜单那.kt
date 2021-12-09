@@ -1,12 +1,14 @@
 package lfp.support.adapter
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
+import com.acap.adapter.slide.SlideMenu
 import lfp.support.adapter.item.TextViewModel
 
 
@@ -38,18 +40,19 @@ class SlideRecyclerViewActivity : AppCompatActivity() {
         mAdapter.add(TextViewModel("5"))
 
 
-        mAdapter.setOnItemClickListener { adapter, viewHolder, view, position ->
-            toast("点击:${viewHolder.saveData.mMsg}")
-        }
+        mAdapter.addSlideMenu(MySlideMenu)
 
-        mAdapter.setOnItemLongClickListener { adapter, viewHolder, view, position ->
-            toast("长按:${viewHolder.saveData.mMsg}")
-            true
-        }
+//        mAdapter.
     }
 
 
     fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    class MySlideMenu : SlideMenu(R.layout.layout_button) {
+        override fun onViewBind(menu: View?, position: Int) {
+
+        }
     }
 }
