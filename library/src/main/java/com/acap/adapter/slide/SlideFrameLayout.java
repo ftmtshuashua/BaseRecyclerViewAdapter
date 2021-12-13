@@ -1,5 +1,6 @@
 package com.acap.adapter.slide;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.acap.adapter.BaseViewHolder;
-import com.acap.adapter.TimeS;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class SlideFrameLayout extends FrameLayout {
     private Scroller mScroller;         //滚动
     private boolean mIsMenuOpened = false;
 
-    private OnMenuStateChangeListener mOnMenuStateChangeListener;
+    private SlideCloseHelper mSlideCloseHelper;
 
     private int mFirstX;
     private int mFirstY;
@@ -100,23 +101,27 @@ public class SlideFrameLayout extends FrameLayout {
     }
 
     private void logE(String tag, MotionEvent e) {
+        float x = e.getX();
+        float y = e.getY();
+        String msg;
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.i("xxx-" + tag, "ACTION_DOWN");
+                msg = "ACTION_DOWN";
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.i("xxx-" + tag, "ACTION_MOVE");
+                msg = "ACTION_MOVE";
                 break;
             case MotionEvent.ACTION_UP:
-                Log.i("xxx-" + tag, "ACTION_UP");
+                msg = "ACTION_UP";
                 break;
             case MotionEvent.ACTION_CANCEL:
-                Log.i("xxx-" + tag, "ACTION_CANCEL");
+                msg = "ACTION_CANCEL";
                 break;
             default:
-                Log.i("xxx-" + tag, "ACTION_" + e.getAction());
+                msg = "ACTION_" + e.getAction();
                 break;
         }
+        Log.i("xxx-" + tag, MessageFormat.format("{0} _ {1,number,0.0}x{2,number,0.0}", msg, x, y));
     }
 
     /*是否启用侧滑*/
@@ -172,6 +177,19 @@ public class SlideFrameLayout extends FrameLayout {
         return (Math.abs(velocityX) >= MINIMUM_VELOCITY && velocityX > velocityY || moveX > moveY && moveX > mTouchSlop);
     }
 
+    //判断是否点击菜单
+    private boolean isMenusClick(float x, float y) {
+        if (mIsMenuOpened) {
+            int scrollX = getScrollX();
+            if (scrollX < 0) { // 左菜单
+                return x <= mMenuViewControl.getSlideWidth(SlideMenu.Place.LEFT);
+            } else if (scrollX > 0) {// 右菜单
+                return x >= (getWidth() - mMenuViewControl.getSlideWidth(SlideMenu.Place.RIGHT));
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
         if (!isEnableSlide()) return super.onInterceptTouchEvent(e);
@@ -192,8 +210,9 @@ public class SlideFrameLayout extends FrameLayout {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                //点击或者其他操作，
-//                release();
+                if (!isMenusClick(mFirstX, mFirstY)) { //点击其他区域，关闭菜单
+                    mSlideCloseHelper.onCloseOther(null);
+                }
                 break;
             default:
                 break;
@@ -201,6 +220,7 @@ public class SlideFrameLayout extends FrameLayout {
         return super.onInterceptTouchEvent(e);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (!isIntercept()) return super.onTouchEvent(e);
@@ -249,7 +269,9 @@ public class SlideFrameLayout extends FrameLayout {
     private void setMenuState(boolean open) {
         if (mIsMenuOpened != open) {
             mIsMenuOpened = open;
-            mOnMenuStateChangeListener.onMenuStateChange(this, open);
+            if (open) {
+                mSlideCloseHelper.onCloseOther(this);
+            }
         }
     }
 
@@ -320,15 +342,8 @@ public class SlideFrameLayout extends FrameLayout {
 
 
     //监听菜单的打开状态
-    public void setOnMenuStateChangeListener(OnMenuStateChangeListener listener) {
-        mOnMenuStateChangeListener = listener;
-    }
-
-    /**
-     * 菜单那状态监听
-     */
-    public interface OnMenuStateChangeListener {
-        void onMenuStateChange(SlideFrameLayout layout, boolean isOpen);
+    public void setSlideCloseHelper(SlideCloseHelper listener) {
+        mSlideCloseHelper = listener;
     }
 
 
@@ -343,16 +358,16 @@ public class SlideFrameLayout extends FrameLayout {
      * @param slideMenuIds
      */
     public void setSlideMenu(SlideMenuProvider menus, BaseViewHolder<?> vh, int[] slideMenuIds) {
-        TimeS timeS = new TimeS();
-        mMenuViewControl.setSlideMenu(menus, slideMenuIds);
-        timeS.look();
-        for (SlideMenu menu : menus.getMenus()) {
+//        TimeS timeS = new TimeS();
+        mMenuViewControl.setSlideMenu(menus, slideMenuIds); // 加载菜单  TODO:每个菜单平均耗时 5ms,考虑优化
+//        timeS.look();
+        for (SlideMenu menu : menus.getMenus()) { //绑定事件
             View view = mMenuViewControl.getMenuView(menu);
             if (view != null) {
                 menu.onViewBind(view, vh);
             }
         }
-        timeS.look();
+//        timeS.look();
     }
 
     // MenuView 管理

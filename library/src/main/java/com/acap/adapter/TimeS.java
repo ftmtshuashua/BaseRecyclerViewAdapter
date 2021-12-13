@@ -12,7 +12,7 @@ import java.text.MessageFormat;
  * @date 2021/12/10 17:49
  * </pre>
  */
-public class TimeS {
+class TimeS {
     long time;
     int count = 1;
 

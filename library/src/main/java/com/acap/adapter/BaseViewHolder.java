@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.acap.adapter.interior.ViewHolderCacheManager;
 import com.cap.adapter.R;
