@@ -1,7 +1,5 @@
 package com.acap.adapter;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +8,7 @@ import com.acap.adapter.internal.ViewHolderOnClick;
 import com.acap.adapter.internal.ViewHolderOnClickTransfer;
 import com.acap.adapter.slide.SlideControl;
 import com.acap.adapter.slide.SlideFrameLayout;
+import com.acap.adapter.slide.SlideMenu;
 
 
 /**
@@ -54,26 +53,22 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder<D> holder, int position) {
-        View contentView = holder.getContentView();
-        View itemView = holder.itemView;
 
-
-        ViewHolderOnClickTransfer mOnClick = null;
         // 点击和长按监听器
-        if (contentView != null) {
-            if (getOnItemClickListener() != null || getOnItemLongClickListener() != null) {
-                mOnClick = getViewHolderOnClick().generate(this, holder);
-                if (getOnItemClickListener() != null) mOnClick.bindOnClickListener(contentView);
-                if (getOnItemLongClickListener() != null) mOnClick.bindOnLongClickListener(contentView);
-            }
-        }
-
-        // 侧滑菜单自动收回
-        if (itemView instanceof SlideFrameLayout) {
-            mSlideControl.bindSlideFrameLayout(position , (SlideFrameLayout) itemView, mOnClick);
+        OnItemClickListener<?> onClick = getOnItemClickListener();
+        OnItemLongClickListener<?> onLongClick = getOnItemLongClickListener();
+        if (onClick != null || onLongClick != null) {
+            ViewHolderOnClickTransfer mOnClick = getViewHolderOnClick().generate(this, holder);
+            if (onClick != null) mOnClick.bindOnClickListener(holder.getContentView());
+            if (onLongClick != null) mOnClick.bindOnLongClickListener(holder.getContentView());
         }
 
         holder.setUpdateData(this, getDataItem(position));
+
+        // 侧滑菜单
+        if (mSlideControl.isEnable()) {
+            mSlideControl.bindSlideFrameLayout(holder);
+        }
     }
 
     @Override
@@ -83,11 +78,21 @@ public abstract class BaseRecyclerViewAdapter<D> extends AdapterObservable<D> {
             mViewHolderOnClick.onViewRecycled(holder);
         }
         if (holder.itemView instanceof SlideFrameLayout) {
-            mSlideControl.unbindSlideFrameLayout((SlideFrameLayout) holder.itemView);
+            mSlideControl.unbindSlideFrameLayout(holder);
         }
 
 
         holder.onRecycled();
+    }
+
+
+    /**
+     * 添加侧滑菜单
+     *
+     * @param menu
+     */
+    public void addSlideMenu(SlideMenu menu) {
+        mSlideControl.addSlideMenu(menu);
     }
 
 

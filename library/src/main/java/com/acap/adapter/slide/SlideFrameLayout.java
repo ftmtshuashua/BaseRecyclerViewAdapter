@@ -1,24 +1,28 @@
 package com.acap.adapter.slide;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.text.MessageFormat;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.acap.adapter.BaseViewHolder;
+import com.acap.adapter.TimeS;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <pre>
@@ -29,7 +33,7 @@ import java.util.TimerTask;
  * @date 2021/12/6 17:57
  * </pre>
  */
-public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScrolling {
+public class SlideFrameLayout extends FrameLayout {
 
     private static final int MINIMUM_VELOCITY = 500; //最小速度
     private int mTouchSlop;     //最小滑动距离
@@ -43,9 +47,6 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
     private int mFirstY;
     private int mLastX;
 
-
-    /* 用于滚动显示的View */
-    private View mSlideLeftView, mSlideRightView;
 
     /**
      * 是否正在水平滑动
@@ -71,90 +72,69 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (mSlideLeftView != null) {
-            int width = mSlideLeftView.getWidth();
-            int v_left = -width;
-            int v_right = v_left + width;
-            int v_top = mSlideLeftView.getTop();
-            int v_bottom = mSlideLeftView.getBottom();
-            mSlideLeftView.layout(v_left, v_top, v_right, v_bottom);
-        }
-        if (mSlideRightView != null) {
-            int width = mSlideRightView.getWidth();
-            int v_left = getWidth();
-            int v_right = v_left + width;
-            int v_top = mSlideRightView.getTop();
-            int v_bottom = mSlideRightView.getBottom();
-            mSlideRightView.layout(v_left, v_top, v_right, v_bottom);
+        if (!mMenuViewControl.isEnable()) return;
+        int childCount = getChildCount();
+        int v_left = 0;
+        for (int i = 0; i < childCount; i++) {
+            View v = getChildAt(i);
+            if (v.getVisibility() == View.VISIBLE) {
+                SlideMenu.Place place = mMenuViewControl.getPlace(v);
+                if (place != null) {
+                    switch (place) {
+                        case LEFT:
+                            v_left = -v.getWidth();
+                            break;
+                        case RIGHT:
+                            v_left = getWidth();
+                            break;
+                    }
+                    v.layout(v_left, v.getTop(), v_left + v.getWidth(), v.getBottom());
+                }
+            }
         }
     }
 
     private void init() {
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mScroller = new Scroller(getContext());
-
-        mSlideLeftView = new TextView(getContext());
-        mSlideLeftView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-        ((TextView) mSlideLeftView).setText("左菜单内容");
-        mSlideLeftView.setBackgroundColor(Color.RED);
-        mSlideRightView = new Button(getContext());
-        mSlideRightView.setLayoutParams(new FrameLayout.LayoutParams(600, LayoutParams.MATCH_PARENT));
-        mSlideRightView.setBackgroundColor(Color.BLUE);
-        mSlideLeftView.setOnClickListener(v -> Log.i("Scroll", "点击了 Left 按钮"));
-        mSlideRightView.setOnClickListener(v -> Log.i("Scroll", "点击了 Right 按钮"));
-        addView(mSlideLeftView);
-        addView(mSlideRightView);
     }
 
-    private void lunx() {
-        Timer timer = new Timer();
-        timer.schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        printDebug("轮询");
-                    }
-                }
-                , 1000, 1000
-        );
-    }
-
-    private void printDebug(String msg) {
-        int childCount = getChildCount();
-        if (childCount == 0) {
-            Log.i("Scroll-" + msg, "没有 ChildView");
-        } else {
-            for (int i = 0; i < childCount; i++) {
-                View childAt = getChildAt(i);
-                Log.i("Scroll-" + msg, MessageFormat.format("{0} -> {1,number,0}", childAt.getClass().getSimpleName(), childAt.getWidth()));
-            }
+    private void logE(String tag, MotionEvent e) {
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                Log.i("xxx-" + tag, "ACTION_DOWN");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Log.i("xxx-" + tag, "ACTION_MOVE");
+                break;
+            case MotionEvent.ACTION_UP:
+                Log.i("xxx-" + tag, "ACTION_UP");
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                Log.i("xxx-" + tag, "ACTION_CANCEL");
+                break;
+            default:
+                Log.i("xxx-" + tag, "ACTION_" + e.getAction());
+                break;
         }
-    }
-
-    private int getSlideLeftWith() {
-        return mSlideLeftView == null ? 0 : mSlideLeftView.getWidth();
-    }
-
-    private int getSlideRightWith() {
-        return mSlideRightView == null ? 0 : mSlideRightView.getWidth();
     }
 
     /*是否启用侧滑*/
     private boolean isEnableSlide() {
-        return getSlideLeftWith() > 0 || getSlideRightWith() > 0;
+        return mMenuViewControl.getSlideWidth(SlideMenu.Place.LEFT) > 0 || mMenuViewControl.getSlideWidth(SlideMenu.Place.RIGHT) > 0;
     }
 
     private boolean isIntercept() {
         return isIntercept && isEnableSlide();
     }
 
-    /*拦截状态设置*/
+    //拦截状态设置 ,拦截之后说明正在控制菜单
     private void intercept(boolean isIntercept) {
         this.isIntercept = isIntercept;
         getParent().requestDisallowInterceptTouchEvent(isIntercept);
     }
 
-    /* 测滑滚动 */
+    //测滑滚动
     private void moveSlide(int dx) {
         dx *= 0.8f;
 //        moveTranslationToX(getCurrentMoveSlide() + dx);
@@ -162,8 +142,8 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
     }
 
     private void moveScrollToX(int x) {
-        int slw = getSlideLeftWith();
-        int srw = getSlideRightWith();
+        int slw = mMenuViewControl.getSlideWidth(SlideMenu.Place.LEFT);
+        int srw = mMenuViewControl.getSlideWidth(SlideMenu.Place.RIGHT);
         if (x > 0) {// 动作：👈
             if (x > srw) x = srw;
         } else if (x < 0) {// 动作：👉
@@ -176,7 +156,7 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
         setScrollX(x);
     }
 
-    /*判断是否需要横向滑动*/
+    //判断是否需要进入滑动状态
     private boolean isScrollAtMove(MotionEvent e) {
         int x = (int) e.getX();
         int y = (int) e.getY();
@@ -192,25 +172,10 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
         return (Math.abs(velocityX) >= MINIMUM_VELOCITY && velocityX > velocityY || moveX > moveY && moveX > mTouchSlop);
     }
 
-
-    private void logEvent(String tag, MotionEvent e) {
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                Log.i("Scroll-" + tag, "ACTION_MOVE");
-                break;
-            case MotionEvent.ACTION_UP:
-                Log.i("Scroll-" + tag, "ACTION_UP");
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                Log.i("Scroll-" + tag, "ACTION_CANCEL");
-                break;
-        }
-    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
         if (!isEnableSlide()) return super.onInterceptTouchEvent(e);
-        logEvent("onInterceptTouchEvent", e);
+//        logE("onInterceptTouchEvent", e);
         addVelocityEvent(e);
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -227,6 +192,7 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                //点击或者其他操作，
 //                release();
                 break;
             default:
@@ -238,8 +204,6 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (!isIntercept()) return super.onTouchEvent(e);
-        logEvent("onTouchEvent", e);
-
         int x = (int) e.getX();
         addVelocityEvent(e);
         switch (e.getAction()) {
@@ -258,14 +222,14 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
                 //动作
                 int scrollX = getScrollX();
                 if (scrollX > 0) { //右菜单
-                    int with = getSlideRightWith();
+                    int with = mMenuViewControl.getSlideWidth(SlideMenu.Place.RIGHT);
                     if ((Math.abs(scrollX) > with / 2 && xVelocity < 0) || xVelocity < -MINIMUM_VELOCITY) { // 操过了菜单的一半 或者动作速度达到
                         animScrollerTo(with);
                     } else { //条件不满足 关闭菜单
                         animScrollerTo(0);
                     }
                 } else if (scrollX < 0) { //左菜单
-                    int with = getSlideLeftWith();
+                    int with = mMenuViewControl.getSlideWidth(SlideMenu.Place.LEFT);
                     if ((Math.abs(scrollX) > with / 2 && xVelocity > 0) || xVelocity > MINIMUM_VELOCITY) { // 操过了菜单的一半 或者动作速度达到
                         animScrollerTo(-with);
                     } else { //条件不满足 关闭菜单
@@ -295,15 +259,14 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
         release();
     }
 
+    //立即回到初始状态
     private void release() {
         releaseVelocity();
         releaseAnimScroll();
         moveScrollToX(0);
     }
 
-    /**
-     * 关闭菜单
-     */
+    //通过动画回到初始状态
     public void closeMenu() {
         if (mIsMenuOpened) {
             releaseAnimScroll();
@@ -355,13 +318,8 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
         }
     }
 
-    @Override
-    public void onScrolling() {
-        if (mIsMenuOpened) {
-            animScrollerTo(0);
-        }
-    }
 
+    //监听菜单的打开状态
     public void setOnMenuStateChangeListener(OnMenuStateChangeListener listener) {
         mOnMenuStateChangeListener = listener;
     }
@@ -371,6 +329,161 @@ public class SlideFrameLayout extends FrameLayout implements SlideControl.OnScro
      */
     public interface OnMenuStateChangeListener {
         void onMenuStateChange(SlideFrameLayout layout, boolean isOpen);
+    }
+
+
+    //------------------------------------- 菜单项 --------------------------------------
+
+    private MenuViewControl mMenuViewControl = new MenuViewControl(this);
+
+    /**
+     * 设置侧滑菜单
+     *
+     * @param vh
+     * @param slideMenuIds
+     */
+    public void setSlideMenu(SlideMenuProvider menus, BaseViewHolder<?> vh, int[] slideMenuIds) {
+        TimeS timeS = new TimeS();
+        mMenuViewControl.setSlideMenu(menus, slideMenuIds);
+        timeS.look();
+        for (SlideMenu menu : menus.getMenus()) {
+            View view = mMenuViewControl.getMenuView(menu);
+            if (view != null) {
+                menu.onViewBind(view, vh);
+            }
+        }
+        timeS.look();
+    }
+
+    // MenuView 管理
+    private static final class MenuViewControl {
+        private final SlideFrameLayout mRoot;
+        private SlideMenuProvider mMenus;
+        //缓存 layout_id -> View
+//        private final HashMap<Integer, View> mLayoutToViews = new HashMap<>();
+        //绑定 View 和 Menu
+        private final HashMap<SlideMenu, View> mMenuToView = new HashMap<>();
+        private final HashMap<View, SlideMenu> mViewToMenu = new HashMap<>();
+
+//        private final HashMap<Integer, View> mViewToPlace = new HashMap<>();
+//        private final HashMap<Integer, SlideMenu> mCacheMenus = new HashMap<>();
+
+        private final boolean[] mMenuChange = new boolean[]{true, true};
+        private final int[] mMenuWidth = new int[]{0, 0};  //数据变化时
+
+        public MenuViewControl(SlideFrameLayout layout) {
+            mRoot = layout;
+        }
+
+        public boolean isEnable() {
+            return mMenus != null && !mMenus.isEmpty();
+        }
+
+        //添加菜单
+        public void setSlideMenu(SlideMenuProvider menus, int[] slideMenuIds) {
+            this.mMenus = menus;
+
+            List<SlideMenu> show_menus = new ArrayList<>();
+            //初始化与加载
+            if (slideMenuIds == null) {
+                for (SlideMenu slideMenu : menus.getMenus()) {
+                    insert(slideMenu);
+                    show_menus.add(slideMenu);
+                }
+            } else {
+                for (int slideMenuId : slideMenuIds) {
+                    SlideMenu slideMenu = menus.getMenuById(slideMenuId);
+                    insert(slideMenu);
+                    show_menus.add(slideMenu);
+                }
+            }
+
+            //隐藏非当前菜单
+            for (SlideMenu slideMenu : mMenuToView.keySet()) {
+                View view = mMenuToView.get(slideMenu);
+                if (show_menus.contains(slideMenu)) {
+                    if (view.getVisibility() != View.VISIBLE) {
+                        view.setVisibility(View.VISIBLE);
+                        setMenuChange(null);
+                    }
+                } else {
+                    if (view.getVisibility() != View.GONE) {
+                        view.setVisibility(View.GONE);
+                        setMenuChange(null);
+                    }
+                }
+            }
+        }
+
+        //添加View到布局
+        private void addView(SlideMenu slideMenu, View view) {
+            mMenuToView.put(slideMenu, view);
+            mViewToMenu.put(view, slideMenu);
+            mRoot.addView(view);
+        }
+
+        //插入菜单
+        private void insert(SlideMenu slideMenu) {
+            View view = mMenuToView.get(slideMenu);
+            if (view == null) {
+                view = LayoutInflater.from(mRoot.getContext()).inflate(slideMenu.getLayoutId(), mRoot, false);
+                addView(slideMenu, view);
+                setMenuChange(slideMenu.getPlace());
+            }
+        }
+
+        //获得某个方向种菜单的宽度
+        public int getSlideWidth(SlideMenu.Place place) {
+            int ordinal = place.ordinal();
+            if (mMenuChange[ordinal]) {
+                mMenuChange[ordinal] = false;
+
+                List<View> arrays = new ArrayList<>();
+                for (SlideMenu menu : mMenuToView.keySet()) {
+                    if (menu.getPlace() == place) {
+                        arrays.add(mMenuToView.get(menu));
+                    }
+                }
+
+                mMenuWidth[ordinal] = getMaxWidth(arrays);
+            }
+            return mMenuWidth[ordinal];
+        }
+
+        //获得布局所在位置
+        private SlideMenu.Place getPlace(View view) {
+            SlideMenu slideMenu = mViewToMenu.get(view);
+            if (slideMenu != null) return slideMenu.getPlace();
+            return null;
+        }
+
+        //设置菜单变化
+        private void setMenuChange(SlideMenu.Place place) {
+            if (place == null) {
+                Arrays.fill(mMenuChange, true);
+            } else {
+                mMenuChange[place.ordinal()] = true;
+            }
+        }
+
+
+        //获得View列表种View的最大宽度
+        private int getMaxWidth(Collection<View> collection) {
+            int width = 0;
+            Iterator<View> iterator = collection.iterator();
+            while (iterator.hasNext()) {
+                View next = iterator.next();
+                if (next.getVisibility() == View.VISIBLE) {
+                    width = Math.max(width, next.getWidth());
+                }
+            }
+            return width;
+        }
+
+
+        public View getMenuView(SlideMenu menu) {
+            return mMenuToView.get(menu);
+        }
     }
 
 }

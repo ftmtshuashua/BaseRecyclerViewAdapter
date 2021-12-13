@@ -2,14 +2,14 @@ package lfp.support.adapter
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.acap.adapter.BaseViewHolder
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
+import com.acap.adapter.multiple.MultipleViewModel
 import com.acap.adapter.slide.SlideMenu
-import lfp.support.adapter.item.TextViewModel
 
 
 /**
@@ -32,27 +32,46 @@ class SlideRecyclerViewActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = mAdapter
 
-        mAdapter.add(TextViewModel("0"))
-        mAdapter.add(TextViewModel("1"))
-        mAdapter.add(TextViewModel("2"))
-        mAdapter.add(TextViewModel("3"))
-        mAdapter.add(TextViewModel("4"))
-        mAdapter.add(TextViewModel("5"))
+        for (i in 0..100) {
+            mAdapter.add(TextViewModel("菜单 $i"))
+        }
 
+        mAdapter.addSlideMenu(MyLefSlideMenu1())
+        mAdapter.addSlideMenu(MyRightSlideMenu())
 
-        mAdapter.addSlideMenu(MySlideMenu)
-
-//        mAdapter.
     }
 
 
-    fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
-    class MySlideMenu : SlideMenu(R.layout.layout_button) {
-        override fun onViewBind(menu: View?, position: Int) {
-
+    // 左菜单
+    inner class MyLefSlideMenu1 : SlideMenu(0, Place.LEFT, R.layout.menu_left_1) {
+        override fun onViewBind(menu: View, vh: BaseViewHolder<*>) {
+            vh.notifyDataChange()
+            menu.findViewById<View>(R.id.view_Button).setOnClickListener { mAdapter.remove(vh.dataPosition) }
         }
     }
+
+    // 左菜单
+    inner class MyLefSlideMenu2 : SlideMenu(1, Place.LEFT, R.layout.menu_left_2) {
+        override fun onViewBind(menu: View, vh: BaseViewHolder<*>) {
+            menu.findViewById<View>(R.id.view_Button).setOnClickListener { mAdapter.remove(vh.dataPosition) }
+        }
+    }
+
+    // 右菜单
+    inner class MyRightSlideMenu : SlideMenu(2, Place.RIGHT, R.layout.menu_right_1) {
+        override fun onViewBind(menu: View, vh: BaseViewHolder<*>) {
+            menu.findViewById<View>(R.id.view_Button).setOnClickListener { mAdapter.remove(vh.dataPosition) }
+        }
+    }
+
+    class TextViewModel(val mMsg: String) : MultipleViewModel(R.layout.layout_textview) {
+//        private var mMenuIds: Array<Int>? = null
+        override fun onUpdate(holder: BaseViewHolder<*>) {
+//            holder.setSlideMenuIds(null)
+            holder.setText(R.id.view_Info, mMsg)
+        }
+
+    }
+
+
 }

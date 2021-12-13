@@ -9,7 +9,7 @@
         android:id="@+id/view_Info"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="#ffeeeeee"
+        android:background="#ffee00ee"
         android:gravity="center_vertical"
         android:paddingLeft="30dp"
         app:layout_constraintBottom_toBottomOf="parent"

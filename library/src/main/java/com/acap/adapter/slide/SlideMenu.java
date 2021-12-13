@@ -2,6 +2,10 @@ package com.acap.adapter.slide;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
+import com.acap.adapter.BaseViewHolder;
+
 /**
  * <pre>
  * Tip:
@@ -12,30 +16,54 @@ import android.view.View;
  * </pre>
  */
 public abstract class SlideMenu {
-    //菜单的布局ID
-    private int mLayoutId;
+    private final int mId;
+    private final int mLayoutId;
+    private final Place mPlace;
 
-    public SlideMenu(int layoutId) {
+    /**
+     * 侧滑菜单配置
+     *
+     * @param menuId   菜单ID,ViewHolder通过菜单ID来确定使用哪一个菜单
+     * @param place    菜单的位置 {@link Place#LEFT} or {@link Place#RIGHT}
+     * @param layoutId 菜单的布局
+     */
+    public SlideMenu(int menuId, @NonNull Place place, int layoutId) {
+        this.mId = menuId;
         this.mLayoutId = layoutId;
+        this.mPlace = place;
     }
 
     public int getLayoutId() {
         return mLayoutId;
     }
 
-    /**
-     * 是否绑定菜单绑定菜单
-     *
-     * @param position 需要绑定的位置
-     * @return true:将菜单绑定到 position 所在位置的ViewHelper上
-     */
-    public boolean onBindMenu(int position) {
-        return true;
+    @NonNull
+    public Place getPlace() {
+        return mPlace;
+    }
+
+    public int getId() {
+        return mId;
     }
 
     /**
      * 当绑定View时
      */
-    public abstract void onViewBind(View menu, int position);
+    public abstract void onViewBind(@NonNull View menu, @NonNull BaseViewHolder<?> vh);
+
+
+    /**
+     * 菜单所在位置
+     */
+    public enum Place {
+        /**
+         * 位于 Item 的左边
+         */
+        LEFT,
+        /**
+         * 位于 Item 的右边
+         */
+        RIGHT
+    }
 
 }

@@ -37,7 +37,6 @@ class LaunchActivity : AppCompatActivity() {
         mAdapter.add(ButtonViewModel("懒人模式-只要Adapter") { startActivity(Intent(this, OnlyAdapterRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("懒人模式-只要ViewHolder") { startActivity(Intent(this, OnlyViewHolderRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("高级功能-侧滑菜单") { startActivity(Intent(this, SlideRecyclerViewActivity::class.java)) })
-
     }
 }
 

@@ -12,7 +12,9 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 
 > 懒人模式 ： BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
 
-> 多种样式 ：MultipleRecyclerViewAdapter + MultipleViewModel
+> 多种布局 ：MultipleRecyclerViewAdapter + MultipleViewModel
+
+> 侧滑菜单
 
 ## BaseRecyclerViewAdapter
 
@@ -32,6 +34,62 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 
 1.在RecyclerView中没有类似ListView的点击长按事件监听，需要我们在ViewHolder中自己处理点击事件，使用起来比较麻烦。而且直接给ViewHolder的itemView设置点击事件会出现一些问题。
 2.我的处理方法是在itemView创建的时候给他设置点击监听器，然后在它外面包裹一层FragmentLayout用来当作真正的itemView，原来的itemView就变成了它的内容。 3.不需要对ViewHolder做任何改动完美实现点击事件监听
+
+## 普通使用
+
+
+## 多种布局 MultipleRecyclerViewAdapter + MultipleViewModel
+
+```
+//绑定布局与数据
+class TextViewModel(val mMsg: String) : MultipleViewModel(R.layout.layout_textview) {
+    override fun onUpdate(holder: BaseViewHolder<*>) { // 这里处理布局与数据的关系
+        holder.setText(R.id.view_Info, mMsg)
+    }
+}
+class ButtonViewModel(val mMsg: String, val mOnClick: () -> Unit) : MultipleViewModel(R.layout.layout_button) {
+    override fun onUpdate(holder: BaseViewHolder<*>) {
+        holder.setText(R.id.view_Button, mMsg)
+    }
+    override fun onClick(context: Context) {
+        mOnClick()
+    }
+}
+
+//使用时传入绑定号的数据对象
+private val mAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() }
+
+mAdapter.add(TextViewModel("layout_textview 布局") 
+mAdapter.add(ButtonViewModel("layout_button 布局") { })
+
+```
+
+## 懒人模式 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
+
+BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
+
+```
+    private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
+        public MyAdapter() {
+            super(R.layout.layout_textview);
+        }
+
+        @Override
+        public void convert(BaseLoonViewHolder<String> helper, String data) {
+            if (TextUtils.isEmpty(data)) {
+                helper.setText(R.id.view_Info, "IS  NULL  ！！");
+            } else helper.setText(R.id.view_Info, data);
+        }
+    }
+```
+
+SimpleRecyclerViewAdapter允许不自定义Adapter。 使用方式:
+
+```
+//Class<? extends BaseViewHolder<D>>   :设置被Adapter加载的ViewHolder
+//layoutResId  :Viewholder使用的布局
+recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId));
+```
 
 ## 数据变化监听
 
@@ -64,90 +122,5 @@ dependencies {
     implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:1.1.2'
 }
 ``` 
-
-## 懒人模式 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter
-
-BaseLoonRecyclerViewAdapter允许不创建ViewHolder,只需要创建Adapter
-
-```
-    private static final class MyAdapter extends BaseLoonRecyclerViewAdapter<String, BaseLoonViewHolder> {
-        public MyAdapter() {
-            super(R.layout.layout_textview);
-        }
-
-        @Override
-        public void convert(BaseLoonViewHolder<String> helper, String data) {
-            if (TextUtils.isEmpty(data)) {
-                helper.setText(R.id.view_Info, "IS  NULL  ！！");
-            } else helper.setText(R.id.view_Info, data);
-        }
-    }
-```
-
-SimpleRecyclerViewAdapter允许不自定义Adapter。 使用方式:
-
-```
-//Class<? extends BaseViewHolder<D>>   :设置被Adapter加载的ViewHolder
-//layoutResId  :Viewholder使用的布局
-recyclerView.setAdapter(new SimpleRecyclerViewAdapter(Class<? extends BaseViewHolder<D>>,layoutResId));
-```
-
-## 一个例子
-
-```
-public class ViewHolderMessageActivity extends Activity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        ListAdapter mAdapter = new ListAdapter();
-        new RecyclerView(this).setAdapter(mAdapter);
-        mAdapter.setOnAdapterDataChangeListener(adapter -> {
-            /* 数据变化监听 */
-            final List<Model> data = adapter.getData();//当数据发生变化的时候拿到数据源
-        });
-        mAdapter.setOnItemClickListener((adapter, viewHolder, view, position) -> {
-            /*点击监听*/
-        });
-        mAdapter.setOnItemLongClickListener((adapter, viewHolder, view, position) -> {
-            /*长按监听*/
-            return true;
-        });
-        mAdapter.addViewHolderMessageHandler((what, obj, layoutIndex) -> {
-            /*ViewHolder消息处理器*/
-            if (what == 666) {
-                Model data = obj;
-            }
-        });
-
-
-        mAdapter.add(new Model("数据"));
-    }
-
-    /*自定义Adapter*/
-    static final class ListAdapter extends BaseLoonRecyclerViewAdapter<Model, BaseLoonViewHolder> {
-        public ListAdapter() {
-            super(R.layout.activity_main);//这里是ViewHolder加载的布局文件
-        }
-
-        @Override
-        public void convert(BaseLoonViewHolder<Model> holper, Model data) {
-            sendMessage(666, data, holper.getDataPosition());//在Adapter或ViewHolder中广播一条消息
-            notifyDataChange();//在Adapter或ViewHolder中显示通知数据变化，它会回调数据变化监听器
-        }
-    }
-
-    /*数据模型*/
-    static final class Model {
-        String name;
-
-        public Model(String name) {
-            this.name = name;
-        }
-    }
-}
-```
 
  

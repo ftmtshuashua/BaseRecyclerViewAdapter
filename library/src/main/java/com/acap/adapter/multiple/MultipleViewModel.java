@@ -12,13 +12,13 @@ import com.acap.adapter.BaseViewHolder;
  * 复炸布局的ViewModel
  */
 public abstract class MultipleViewModel {
-    RecyclerView.Adapter mAdapter;
+    RecyclerView.Adapter<?> mAdapter;
 
-    public void onAttach(RecyclerView.Adapter adapter) {
+    public void onAttach(RecyclerView.Adapter<?> adapter) {
         mAdapter = adapter;
     }
 
-    public RecyclerView.Adapter getAdapter() {
+    public RecyclerView.Adapter<?> getAdapter() {
         return mAdapter;
     }
 
@@ -43,7 +43,7 @@ public abstract class MultipleViewModel {
      *
      * @param holder
      */
-    public abstract void onUpdate(@NonNull BaseViewHolder holder);
+    public abstract void onUpdate(@NonNull BaseViewHolder<?> holder);
 
     /**
      * 当Model对应的UI被点击的时候，响应点击事件到Model中
