@@ -46,6 +46,13 @@ public abstract class MultipleViewModel {
     public abstract void onUpdate(@NonNull BaseViewHolder<?> holder);
 
     /**
+     * 当 holder 被回收时回调
+     */
+    protected void onRecycled(@NonNull BaseViewHolder<?> holder) {
+
+    }
+
+    /**
      * 当Model对应的UI被点击的时候，响应点击事件到Model中
      * <p>
      * 当Adapter的setOnItemClickListener方法被调用时候，这个方法将不再回调

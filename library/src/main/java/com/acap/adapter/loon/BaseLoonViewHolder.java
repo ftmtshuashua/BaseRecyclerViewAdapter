@@ -27,13 +27,22 @@ public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
 
     @Override
     protected void onUpdateUI(D data) {
-        if (mOnViewHolderUpdate != null) mOnViewHolderUpdate.convert(this, data);
+        if (mOnViewHolderUpdate != null) {
+            mOnViewHolderUpdate.convert(this, data);
+        }
     }
 
     public void setOnViewHolderUpdate(OnViewHolderUpdate l) {
         mOnViewHolderUpdate = l;
     }
 
+    @Override
+    protected void onRecycled() {
+        super.onRecycled();
+        if (mOnViewHolderUpdate != null) {
+            mOnViewHolderUpdate.onRecycled(this, getSaveData());
+        }
+    }
 
     public interface OnViewHolderUpdate<K extends BaseLoonViewHolder, T> {
         /**
@@ -41,6 +50,11 @@ public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
          * @param data   绑定的数据
          */
         void convert(K holder, T data);
+
+        /**
+         * 当 holder 被回收
+         */
+        void onRecycled(K holder, T data);
     }
 
 }

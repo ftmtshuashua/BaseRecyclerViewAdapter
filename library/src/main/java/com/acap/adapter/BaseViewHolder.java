@@ -48,6 +48,7 @@ public abstract class BaseViewHolder<D> extends ViewHolderCacheManager<D> {
      * 当ViewHolder被回收的时候调用
      */
     protected void onRecycled() {
+
     }
 
     /**

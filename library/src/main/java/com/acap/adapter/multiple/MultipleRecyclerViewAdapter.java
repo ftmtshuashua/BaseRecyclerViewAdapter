@@ -51,4 +51,9 @@ public class MultipleRecyclerViewAdapter<T extends MultipleViewModel> extends Ba
         data.onAttach(this);
         data.onUpdate(holder);
     }
+
+    @Override
+    public void onRecycled(BaseLoonViewHolder<T> holder, T data) {
+        data.onRecycled(holder);
+    }
 }
