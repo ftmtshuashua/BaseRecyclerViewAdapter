@@ -36,6 +36,7 @@
         <activity
             android:name=".OnlyViewHolderRecyclerViewActivity"
             android:label="懒人模式-ViewHolder" />
+        <activity android:name=".DiffRecyclerViewActivity" />
     </application>
 
 </manifest>

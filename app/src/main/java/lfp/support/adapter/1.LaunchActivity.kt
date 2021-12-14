@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
 import com.acap.adapter.multiple.MultipleViewModel
 import lfp.support.adapter.item.ButtonViewModel
+import lfp.support.adapter.utils.DefaultItemDecoration
 
 
 /**
@@ -28,7 +29,7 @@ class LaunchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_launch)
         val mRecyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-        mRecyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        mRecyclerView.addItemDecoration(DefaultItemDecoration(this))
         mRecyclerView.adapter = mAdapter
 
         mAdapter.add(ButtonViewModel("基础功能-增删查改") { startActivity(Intent(this, BasisRecyclerViewActivity::class.java)) })
@@ -37,6 +38,7 @@ class LaunchActivity : AppCompatActivity() {
         mAdapter.add(ButtonViewModel("懒人模式-只要Adapter") { startActivity(Intent(this, OnlyAdapterRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("懒人模式-只要ViewHolder") { startActivity(Intent(this, OnlyViewHolderRecyclerViewActivity::class.java)) })
         mAdapter.add(ButtonViewModel("高级功能-侧滑菜单") { startActivity(Intent(this, SlideRecyclerViewActivity::class.java)) })
+        mAdapter.add(ButtonViewModel("高级功能-差分算法") { startActivity(Intent(this, DiffRecyclerViewActivity::class.java)) })
     }
 }
 

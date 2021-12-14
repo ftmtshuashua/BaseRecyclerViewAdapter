@@ -2,12 +2,14 @@ package com.acap.adapter.interior;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.acap.adapter.BaseViewHolder;
+import com.acap.adapter.diff.DataDiffHelper;
+import com.acap.adapter.diff.OnDiffUpdateCallback;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import com.acap.adapter.BaseViewHolder;
 
 /**
  * <pre>
@@ -24,20 +26,11 @@ import com.acap.adapter.BaseViewHolder;
  * </pre>
  */
 public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseViewHolder<D>> implements IDataOrigin<D> {
-    /**
-     * 禁用所有Item数据动画
-     */
-    public static final int FLAG_DISABLE_ITEM_ANIMATOR = 0x00000001;
+    //Adapter更新
+    private final OnDiffUpdateCallback mUpdate = new OnDiffUpdateCallback(this);
 
     /* 用于列表中显示数据 */
-    private final List<D> mDataArray = new ArrayList<>();
-    private int mFlag;
-    /*
-     * 设置notify方法的偏移量，当数据源改变需要通知Adapter刷新UI，为刷新的UI的位置设置一个偏移量     *
-     * 允许在某些情况比如顶部增加一个和数据源相对独立的数据，这个时候数据源中下标为0的数据刷新UI的时候需要调用notify(1)
-     *
-     */
-    private int mNotifyItemOffSet = 0;
+    private final DataDiffHelper<D> mDataDiff = new DataDiffHelper(mUpdate);
 
 
     /*数据储存，方便在ViewHolder中获取*/
@@ -63,50 +56,26 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
         return mTags == null ? null : mTags.get(key);
     }
 
-
     /**
-     * 设置刷新偏移量
+     * 启用差分算法进行列表更新,相比于刷新整个列表具有更高的性能
      *
-     * @param offset 偏移量
+     * @param enable true:启用
      */
-    public void setNotifyItemOffSet(int offset) {
-        this.mNotifyItemOffSet = offset;
-    }
-
-    public int getNotifyItemOffSet() {
-        return mNotifyItemOffSet;
+    public void setDiffEnable(boolean enable) {
+        mDataDiff.setEnable(enable);
     }
 
     /**
-     * 获得Adapter行为配置
-     */
-    public int getFlag() {
-        return mFlag;
-    }
-
-    /**
-     * 设置Item动画是否启用
+     * 是否让差分算法异步运行,有助于提升性能
      *
-     * @param enable true:启用  false:禁用
+     * @param async true:异步执行
      */
-    public void setItemAnimationEnable(boolean enable) {
-        if (enable) {
-            mFlag &= ~FLAG_DISABLE_ITEM_ANIMATOR;
-        } else {
-            mFlag |= FLAG_DISABLE_ITEM_ANIMATOR;
-        }
-    }
-
-    /**
-     * 判断是需要启用Item动画
-     *
-     * @return true:启用  false:禁用
-     */
-    public boolean isEnableItemAnimation() {
-        return (mFlag & FLAG_DISABLE_ITEM_ANIMATOR) == 0;
+    public void setDiffAsync(boolean async) {
+        mDataDiff.setAsync(async);
     }
 
     /*----------- 数据操作 -----------*/
+
     //<editor-fold desc="设置数据并执行更新动画: nSet() |  Add()  |  Insert()  || Move() || replace()">
 
     @Override
@@ -116,8 +85,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 
     @Override
     public <T extends D> void set(List<T> data) {
-        if (getDataCount() > 0) removeAll();
-        add(data);
+        mDataDiff.set(data);
     }
 
     @Override
@@ -138,12 +106,8 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
     @Override
     public <T extends D> void insert(int index, List<T> data) {
         if (data == null) return;
-        getData().addAll(index, data);
-        if (isEnableItemAnimation()) {
-            final int start = mNotifyItemOffSet + index;
-            final int size = data.size();
-            notifyItemRangeInserted(start, size);
-        }
+        mDataDiff.addAll(index, data);
+        mUpdate.onInserted(index, data.size());
         onOperationDataOrigin();
     }
 
@@ -154,47 +118,32 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
 
     @Override
     public List<D> remove(int index, int count) {
-        if (isEnableItemAnimation()) {
-            final int start = mNotifyItemOffSet + index;
-            final int size = count;
-            notifyItemRangeRemoved(start, size);
-        }
-        List<D> removes = new ArrayList<>();
-        for (int i = index + count - 1; i >= index; i--) {
-            removes.add(getData().remove(i));
-        }
+        List<D> remove = mDataDiff.remove(index, count);
+        mUpdate.onRemoved(index, count);
         onOperationDataOrigin();
-        return removes;
+        return remove;
     }
 
     @Override
     public void removeAll() {
-        if (isEnableItemAnimation()) {
-            notifyItemRangeRemoved(mNotifyItemOffSet, getDataCount());
-        }
-        getData().clear();
+        mUpdate.onRemoved(0, mDataDiff.size());
+        mDataDiff.clear();
         onOperationDataOrigin();
     }
 
     @Override
     public void move(int fromIndex, int toIndex) {
-        D form = getData().remove(fromIndex);
-        getData().add(toIndex, form);
-        if (isEnableItemAnimation()) {
-            notifyItemMoved(fromIndex + mNotifyItemOffSet, toIndex + mNotifyItemOffSet);
-        }
+        mDataDiff.move(fromIndex, toIndex);
+        mUpdate.onMoved(fromIndex, toIndex);
         onOperationDataOrigin();
     }
 
     @Override
     public D replace(int index, D data) {
-        final D remove = getData().remove(index);
-        getData().add(index, data);
-        if (isEnableItemAnimation()) {
-            notifyItemChanged(index);
-        }
+        D replace = mDataDiff.replace(index, data);
+        mUpdate.onChanged(index, 1, null);
         onOperationDataOrigin();
-        return remove;
+        return replace;
     }
     //</editor-fold>
 
@@ -258,7 +207,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      */
     public <T extends D> void insertOnly(int index, List<T> data) {
         if (data == null) return;
-        getData().addAll(index, data);
+        mDataDiff.addAll(index, data);
         onOperationDataOrigin();
     }
 
@@ -282,7 +231,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
     public List<D> removeOnly(int index, int count) {
         List<D> removes = new ArrayList<>();
         for (int i = index + count - 1; i >= index; i--) {
-            removes.add(getData().remove(i));
+            removes.add(mDataDiff.remove(i));
         }
         onOperationDataOrigin();
         return removes;
@@ -292,7 +241,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * 移除所有数据
      */
     public void removeAllOnly() {
-        getData().clear();
+        mDataDiff.clear();
         onOperationDataOrigin();
     }
 
@@ -303,8 +252,8 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * @param toIndex   希望移动到哪里
      */
     public void moveOnly(int fromIndex, int toIndex) {
-        D form = getData().remove(fromIndex);
-        getData().add(toIndex, form);
+        D form = mDataDiff.remove(fromIndex);
+        mDataDiff.add(toIndex, form);
         onOperationDataOrigin();
     }
 
@@ -316,13 +265,14 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * @return 被替换的数据
      */
     public D replaceOnly(int index, D data) {
-        final D remove = getData().remove(index);
-        getData().add(index, data);
+        final D remove = mDataDiff.remove(index);
+        mDataDiff.add(index, data);
         onOperationDataOrigin();
         return remove;
     }
 
     //</editor-fold>
+
     @Override
     public long getItemId(int position) {
         return super.getItemId(position);
@@ -342,7 +292,7 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * 获得数据源集合对象
      */
     public List<D> getData() {
-        return mDataArray;
+        return mDataDiff.getList();
     }
 
     /**
@@ -358,11 +308,12 @@ public abstract class AdapterDataManager<D> extends RecyclerView.Adapter<BaseVie
      * 获得数据源中数据的数量
      */
     public int getDataCount() {
-        return mDataArray == null ? 0 : mDataArray.size();
+        return mDataDiff.size();
     }
-
 
     /*当数据源被操作的时候被调用*/
     protected void onOperationDataOrigin() {
     }
+
+
 }

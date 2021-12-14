@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.acap.adapter.BaseViewHolder
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
 import com.acap.adapter.multiple.MultipleViewModel
+import lfp.support.adapter.utils.DefaultItemDecoration
 
 
 /**
@@ -28,7 +29,7 @@ class ViewHolderMessageRecyclerViewActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mAdapter
 
 

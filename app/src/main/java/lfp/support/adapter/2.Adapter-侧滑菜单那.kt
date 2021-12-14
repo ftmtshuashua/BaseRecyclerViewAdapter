@@ -10,6 +10,7 @@ import com.acap.adapter.BaseViewHolder
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
 import com.acap.adapter.multiple.MultipleViewModel
 import com.acap.adapter.slide.SlideMenu
+import lfp.support.adapter.utils.DefaultItemDecoration
 
 
 /**
@@ -32,7 +33,7 @@ class SlideRecyclerViewActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mAdapter
 
         mAdapter.addSlideMenu(MyLefSlideMenu1())
@@ -55,7 +56,6 @@ class SlideRecyclerViewActivity : AppCompatActivity() {
     // 左菜单
     inner class MyLefSlideMenu1 : SlideMenu(MENU_LEFT_1, Place.LEFT, R.layout.menu_left_1) {
         override fun onViewBind(menu: View, vh: BaseViewHolder<*>) {
-            vh.notifyDataChange()
             menu.findViewById<View>(R.id.view_Button).setOnClickListener { mAdapter.remove(vh.dataPosition) }
         }
     }

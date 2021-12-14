@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
 import lfp.support.adapter.item.TextViewModel
+import lfp.support.adapter.utils.DefaultItemDecoration
 
 
 /**
@@ -27,7 +28,7 @@ class ClickRecyclerViewActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mAdapter
 
         mAdapter.add(TextViewModel("0"))

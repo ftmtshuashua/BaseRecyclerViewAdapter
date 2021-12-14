@@ -3,13 +3,13 @@ package lfp.support.adapter
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.acap.adapter.BaseViewHolder
 import com.acap.adapter.SimpleRecyclerViewAdapter
 import com.acap.adapter.loon.BaseLoonRecyclerViewAdapter
 import com.acap.adapter.loon.BaseLoonViewHolder
+import lfp.support.adapter.utils.DefaultItemDecoration
 
 
 /**
@@ -29,7 +29,7 @@ class OnlyAdapterRecyclerViewActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mAdapter
 
         mAdapter.add("0")
@@ -67,7 +67,7 @@ class OnlyViewHolderRecyclerViewActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mAdapter
 
         mAdapter.add("0")

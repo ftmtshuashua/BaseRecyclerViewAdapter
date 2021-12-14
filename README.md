@@ -1,6 +1,8 @@
 BaseRecyclerViewAdapter
 =====
 [![](https://jitpack.io/v/ftmtshuashua/BaseRecyclerViewAdapter.svg)](https://jitpack.io/#ftmtshuashua/BaseRecyclerViewAdapter)
+![](https://img.shields.io/badge/android-4.0%2B-blue)
+[![License Apache2.0](http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维护一个数据集合，当数据发生变化的时候自动反映到UI上。
 
@@ -14,7 +16,9 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 
 > 多种布局 ：MultipleRecyclerViewAdapter + MultipleViewModel
 
-> 侧滑菜单
+> 数据差分器 ：无需更新整个列表,只对变化做处理,某些情况下能极大的提升性能
+
+> 侧滑菜单 ：SlideMenu
 
 ## BaseRecyclerViewAdapter
 
@@ -36,7 +40,26 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 2.我的处理方法是在itemView创建的时候给他设置点击监听器，然后在它外面包裹一层FragmentLayout用来当作真正的itemView，原来的itemView就变成了它的内容。 3.不需要对ViewHolder做任何改动完美实现点击事件监听
 
 ## 普通使用
+```
+    class MyRecyclerViewAdapter : BaseRecyclerViewAdapter<String>() {
+        override fun onCreateViewHolder(parent: ViewGroup, var2: Int): BaseViewHolder<String> {
+            return MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_textview, parent, false))
+        }
+    }
 
+    class MyViewHolder(itemView: View) : BaseViewHolder<String>(itemView) {
+        override fun onUpdateUI(data: String?) {
+            setText(R.id.view_Info, data ?: "null")
+        }
+    }
+
+    private val mAdapter by lazy { MyRecyclerViewAdapter() }
+ 
+    mAdapter.set("data1")
+    mAdapter.add("data2")
+
+
+```
 
 ## 多种布局 MultipleRecyclerViewAdapter + MultipleViewModel
 
@@ -62,6 +85,46 @@ private val mAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() 
 mAdapter.add(TextViewModel("layout_textview 布局") 
 mAdapter.add(ButtonViewModel("layout_button 布局") { })
 
+```
+
+## 侧滑菜单
+
+```
+val mAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() }
+
+//创建菜单
+class MyLefSlideMenu1 : SlideMenu(MENU_ID_1, Place.LEFT, R.layout.menu_left_1) {
+        override fun onViewBind(menu: View, vh: BaseViewHolder<*>) {
+            menu.findViewById<View>(R.id.view_Button).setOnClickListener { mAdapter.remove(vh.dataPosition) }
+        }
+    }
+    
+//使用菜单
+mAdapter.addSlideMenu(MyLefSlideMenu1())
+
+//调用 ViewHolder 的 setSlideMenuIds() 方法配置当前 ViewHolder 应用的菜单，不调用则应用全部菜单
+class MenuViewModel() : MultipleViewModel(R.layout.layout_slide_menu) {
+        override fun onUpdate(holder: BaseViewHolder<*>) {
+            holder.setSlideMenuIds(MENU_ID_1)
+        }
+    }
+```
+
+## 差分算法
+
+无需更新整个列表,只对变化做处理,某些情况下能极大的提升性能
+
+```
+    private val mAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() }
+    
+    //启动差分算法
+    mAdapter.setDiffEnable(true)    
+    
+    //异步执行差分算法
+    mAdapter.setDiffAsync(true)    
+    
+    //更新数据时，直接设置新数据源即可
+    mAdapter.set(datas)
 ```
 
 ## 懒人模式 BaseLoonRecyclerViewAdapter 与 SimpleRecyclerViewAdapter

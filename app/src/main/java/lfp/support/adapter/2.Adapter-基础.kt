@@ -1,15 +1,19 @@
 package lfp.support.adapter
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.acap.adapter.BaseRecyclerViewAdapter
+import com.acap.adapter.BaseViewHolder
 import com.acap.adapter.multiple.MultipleRecyclerViewAdapter
 import com.acap.adapter.multiple.MultipleViewModel
 import lfp.support.adapter.item.ButtonViewModel
-import lfp.support.adapter.item.TextViewModel
+import lfp.support.adapter.utils.DefaultItemDecoration
 
 
 /**
@@ -21,8 +25,7 @@ import lfp.support.adapter.item.TextViewModel
  * </pre>
  */
 class BasisRecyclerViewActivity : AppCompatActivity() {
-    private val mAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() }
-    private val mMenuAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() }
+    private val mAdapter by lazy { MyRecyclerViewAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,24 +33,41 @@ class BasisRecyclerViewActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.view_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mAdapter
 
         initMenu()
     }
 
+    class MyRecyclerViewAdapter : BaseRecyclerViewAdapter<String>() {
+        override fun onCreateViewHolder(parent: ViewGroup, var2: Int): BaseViewHolder<String> {
+            return MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_textview, parent, false))
+        }
+    }
+
+    class MyViewHolder(itemView: View) : BaseViewHolder<String>(itemView) {
+        override fun onUpdateUI(data: String?) {
+            setText(R.id.view_Info, data ?: "null")
+        }
+    }
+
+
+    //-----------------------------------  以下是菜单配置，无需关注  -------------------------------------
+
+    private val mMenuAdapter by lazy { MultipleRecyclerViewAdapter<MultipleViewModel>() }
+
     /* 菜单配置 */
     fun initMenu() {
         val recyclerView = findViewById<RecyclerView>(R.id.view_MenuRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DefaultItemDecoration(this))
         recyclerView.adapter = mMenuAdapter
 
         //生成item项
-        val generate: (String, Int) -> List<TextViewModel> = { title, count ->
-            val array = mutableListOf<TextViewModel>()
+        val generate: (String, Int) -> List<String> = { title, count ->
+            val array = mutableListOf<String>()
             for (i in 0 until count) {
-                array.add(TextViewModel("$title$i"))
+                array.add("$title$i")
             }
             array
         }
