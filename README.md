@@ -40,6 +40,7 @@ BaseRecyclerViewAdapter是一个RecyclerView的万能适配器，它的内部维
 2.我的处理方法是在itemView创建的时候给他设置点击监听器，然后在它外面包裹一层FragmentLayout用来当作真正的itemView，原来的itemView就变成了它的内容。 3.不需要对ViewHolder做任何改动完美实现点击事件监听
 
 ## 普通使用
+
 ```
     class MyRecyclerViewAdapter : BaseRecyclerViewAdapter<String>() {
         override fun onCreateViewHolder(parent: ViewGroup, var2: Int): BaseViewHolder<String> {
@@ -123,7 +124,7 @@ class MenuViewModel() : MultipleViewModel(R.layout.layout_slide_menu) {
     //异步执行差分算法
     mAdapter.setDiffAsync(true)    
     
-    //更新数据时，直接设置新数据源即可
+    //更新数据时，直接设置新数据源即可。差分算法内部通过 equals() 方法判断是否为同一个数据源
     mAdapter.set(datas)
 ```
 
