@@ -183,7 +183,7 @@ allprojects {
 ```
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:1.1.2'
+    implementation 'com.github.ftmtshuashua:BaseRecyclerViewAdapter:1.2.0'
 }
 ``` 
 
