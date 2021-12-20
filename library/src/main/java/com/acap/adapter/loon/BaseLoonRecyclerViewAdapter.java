@@ -127,4 +127,8 @@ public abstract class BaseLoonRecyclerViewAdapter<D, K extends BaseLoonViewHolde
         }
         return null;
     }
+
+    @Override
+    public void onRecycled(@NonNull BaseLoonViewHolder<D> holder, D data) {
+    }
 }

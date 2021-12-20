@@ -2,6 +2,8 @@ package com.acap.adapter.loon;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.acap.adapter.BaseViewHolder;
 
 /**
@@ -49,12 +51,12 @@ public class BaseLoonViewHolder<D> extends BaseViewHolder<D> {
          * @param holder 加载数据的ViewHolder
          * @param data   绑定的数据
          */
-        void convert(K holder, T data);
+        void convert(@NonNull K holder, T data);
 
         /**
          * 当 holder 被回收
          */
-        void onRecycled(K holder, T data);
+        void onRecycled(@NonNull K holder, T data);
     }
 
 }

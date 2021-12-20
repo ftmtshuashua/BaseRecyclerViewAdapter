@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.acap.adapter.interior.ViewHolderCacheManager;
-import com.cap.adapter.R;
 
 /**
  * <pre>
