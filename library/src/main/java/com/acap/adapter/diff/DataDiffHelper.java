@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.acap.adapter.interior.OnDataChangeListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.concurrent.Executor;
 public class DataDiffHelper<T> {
     @NonNull
     private final OnDiffUpdateCallback mUpdate;
+    private final OnDataChangeListener mOnDataChange;
     private boolean mIsDiffEnable = false;
     private boolean mIsDiffAsync = false;
 
@@ -30,8 +33,9 @@ public class DataDiffHelper<T> {
     @NonNull
     private List<T> mReadOnlyList = Collections.unmodifiableList(mList);
 
-    public DataDiffHelper(@NonNull OnDiffUpdateCallback update) {
+    public DataDiffHelper(@NonNull OnDiffUpdateCallback update, OnDataChangeListener mOnDataChange) {
         this.mUpdate = update;
+        this.mOnDataChange = mOnDataChange;
     }
 
     public void setEnable(boolean enable) {
@@ -40,6 +44,12 @@ public class DataDiffHelper<T> {
 
     public void setAsync(boolean async) {
         mIsDiffAsync = async;
+    }
+
+    private void onDataChange() {
+        if (mOnDataChange != null) {
+            mOnDataChange.onDataChange();
+        }
     }
 
     //检测Diff状态
@@ -57,7 +67,9 @@ public class DataDiffHelper<T> {
 
     public T remove(int index) {
         diffCheck();
-        return mList.remove(index);
+        T remove = mList.remove(index);
+        onDataChange();
+        return remove;
     }
 
     public List<T> remove(int index, int count) {
@@ -66,36 +78,47 @@ public class DataDiffHelper<T> {
         for (int i = index + count - 1; i >= index; i--) {
             removes.add(mList.remove(i));
         }
+        mUpdate.onRemoved(index, count);
+        onDataChange();
         return removes;
     }
 
     public void add(int index, T data) {
         diffCheck();
         mList.add(index, data);
+        onDataChange();
     }
 
     public void move(int fromIndex, int toIndex) {
         diffCheck();
         mList.add(toIndex, mList.remove(fromIndex));
+        mUpdate.onMoved(fromIndex, toIndex);
+        onDataChange();
     }
 
     public void clear() {
         diffCheck();
+        mUpdate.onRemoved(0, mList.size());
         mList = new ArrayList<>();
         mReadOnlyList = Collections.unmodifiableList(mList);
+        onDataChange();
     }
 
     public <D extends T> boolean addAll(int index, List<D> data) {
         if (data == null) return false;
         diffCheck();
-        return mList.addAll(index, data);
-
+        boolean b = mList.addAll(index, data);
+        mUpdate.onInserted(index, data.size());
+        onDataChange();
+        return b;
     }
 
     public T replace(int index, T data) {
         diffCheck();
         final T remove = mList.remove(index);
         mList.add(index, data);
+        mUpdate.onChanged(index, 1, null);
+        onDataChange();
         return remove;
     }
 
@@ -121,6 +144,8 @@ public class DataDiffHelper<T> {
             if (add_size > 0) {
                 mUpdate.onInserted(change_size, add_size);
             }
+
+            onDataChange();
         }
     }
 
@@ -140,12 +165,14 @@ public class DataDiffHelper<T> {
             int size = mList.size();
             clear();
             mUpdate.onRemoved(0, size);
+            onDataChange();
             return;
         }
         if (mList.isEmpty()) {
             mList = new ArrayList<>(data);
             mReadOnlyList = Collections.unmodifiableList(mList);
             mUpdate.onInserted(0, data.size());
+            onDataChange();
             return;
         }
 
@@ -188,6 +215,8 @@ public class DataDiffHelper<T> {
         mReadOnlyList = Collections.unmodifiableList(newList);
         mDiffRunning = false;
         diffResult.dispatchUpdatesTo(mUpdate);
+
+        onDataChange();
     }
 
     private static final class DiffCallback<T> extends DiffUtil.Callback {

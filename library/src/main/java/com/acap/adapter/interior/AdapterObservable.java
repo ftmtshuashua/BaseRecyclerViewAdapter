@@ -131,8 +131,8 @@ public abstract class AdapterObservable<D> extends AdapterDataManager<D> {
     }
 
     @Override
-    protected void onOperationDataOrigin() {
-        super.onOperationDataOrigin();
+    public void onDataChange() {
+        super.onDataChange();
         notifyDataChange();
     }
 
